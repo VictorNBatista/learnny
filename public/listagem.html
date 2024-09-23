@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Usuários</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Listagem de Usuários</h1>
+    <table id="usersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Contato</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dados dos usuários serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        // Função para buscar e exibir os usuários
+        async function fetchUsers() {
+            try {
+                const response = await fetch('http://localhost:8000/api/users');
+                const data = await response.json();
+
+                // Pega a tabela no HTML
+                const usersTable = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+
+                // Limpa qualquer dado existente na tabela
+                usersTable.innerHTML = '';
+
+                // Percorre os usuários e insere na tabela
+                data.user.data.forEach(user => {
+                    const row = usersTable.insertRow();
+                    row.insertCell(0).innerText = user.id;
+                    row.insertCell(1).innerText = user.name;
+                    row.insertCell(2).innerText = user.email;
+                    row.insertCell(3).innerText = user.contact;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar os usuários:', error);
+            }
+        }
+
+        // Chama a função para buscar os usuários assim que a página carrega
+        window.onload = fetchUsers;
+    </script>
+</body>
+</html>
