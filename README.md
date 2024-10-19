@@ -80,12 +80,12 @@ php artisan migrate
 
 Execute os comandos abaixo para configurar o Laravel Passport:
 
-### 1. Gerar as suas chaves criptografia.
+#### 1. Gerar as suas chaves criptografia.
 ```bash
 php artisan passport:keys
 ```
 
-### 2. Gerar o seu personal access.
+#### 2. Gerar o seu personal access.
 ```bash
 php artisan passport:client --personal
 ```
