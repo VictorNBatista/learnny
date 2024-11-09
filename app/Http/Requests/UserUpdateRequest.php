@@ -30,6 +30,12 @@ class UserUpdateRequest extends FormRequest
                 'sometimes',
                 'string',
                 'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(),
             ],
             'password_confirmation' => 'sometimes|same:password'
         ];

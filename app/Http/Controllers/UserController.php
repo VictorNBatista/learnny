@@ -6,121 +6,90 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
-    // Requisicao GET de ate 15 usuarios
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
-        $user = User::select('id', 'name', 'email', 'contact')
-            ->paginate('15');
+        $users = $this->userService->listUsers();
 
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Usuários encontrados!!',
-            'user' => $user
+            'message' => 'Usuários encontrados!',
+            'users' => $users
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    //requisicao POST do usuario
     public function store(UserCreateRequest $request)
     {
-
-        $data = $request->all();
-
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'contact' => $data['contact'],
-            'password' => $data['password'],
-        ]);
+        $user = $this->userService->createUser($request->validated());
 
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Usuário cadastrado com sucesso!!',
+            'message' => 'Usuário cadastrado com sucesso!',
             'user' => $user
         ]);
     }
 
-    // Requisicao GET de usuario especifico
-    public function show(string $id)
+    public function show($id)
     {
-        $user = User::find($id);
+        $user = $this->userService->findUserById($id);
 
         if (!$user) {
             return response()->json([
                 'status' => 404,
-                'mensagem' => 'Usuário não encontrado!',
-                'user' => $user
+                'message' => 'Usuário não encontrado!'
             ]);
         }
 
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Usuário encontrado!!',
+            'message' => 'Usuário encontrado!',
             'user' => $user
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(UserUpdateRequest $request, $id)
     {
-        //
-    }
-
-    // Requisicao PUT para 
-    public function update(UserUpdateRequest $request, string $id)
-    {
-        $data = $request->all();
-        
-        $user = User::find($id);
+        $user = $this->userService->updateUser($id, $request->validated());
 
         if (!$user) {
             return response()->json([
                 'status' => 404,
-                'mensagem' => 'Usuário não encontrado!',
-                'user' => $user
+                'message' => 'Usuário não encontrado!'
             ]);
         }
 
-        $user->update($data);
-
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Usuário atualizado com sucesso!',
+            'message' => 'Usuário atualizado com sucesso!',
             'user' => $user
         ]);
     }
 
-    // Requisicao DELETE
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $user = User::find($id);
+        $user = $this->userService->deleteUser($id);
 
         if (!$user) {
             return response()->json([
                 'status' => 404,
-                'mensagem' => 'Usuário não encontrado!',
-                'user' => $user
+                'message' => 'Usuário não encontrado!'
             ]);
         }
 
-        $user->delete($id);
-
         return response()->json([
             'status' => 200,
-            'mensagem' => 'Usuário excluído com sucesso!',
-            'user' => $user
+            'message' => 'Usuário excluído com sucesso!'
         ]);
     }
 }

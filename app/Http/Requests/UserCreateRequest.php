@@ -30,6 +30,11 @@ class UserCreateRequest extends FormRequest
                 'required',
                 'string',
                 'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
             ],
             'password_confirmation' => 'required|same:password'
         ];

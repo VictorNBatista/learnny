@@ -11,9 +11,15 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
-        //
+        $this->app->bind(\App\Repositories\UserRepository::class, function ($app) {
+            return new \App\Repositories\UserRepository();
+        });
+
+        $this->app->bind(\App\Services\UserService::class, function ($app) {
+            return new \App\Services\UserService($app->make(\App\Repositories\UserRepository::class));
+        });
     }
 
     /**
