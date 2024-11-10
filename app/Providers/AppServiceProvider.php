@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\UserRepository;
+use App\Repositories\ProfessorRepository;
 use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
