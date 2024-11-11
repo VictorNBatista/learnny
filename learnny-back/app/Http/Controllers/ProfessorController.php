@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Professor;
 use App\Http\Requests\ProfessorCreateRequest;
+use App\Http\Requests\ProfessorUpdateRequest;
 use App\Services\ProfessorService;
 use Illuminate\Http\Request;
 
@@ -46,7 +47,7 @@ class ProfessorController extends Controller
         ]);
     }
 
-    public function update(ProfessorCreateRequest $request, $id)
+    public function update(ProfessorUpdateRequest $request, $id)
     {
         $professor = $this->professorService->updateProfessor($id, $request->validated());
         return response()->json([

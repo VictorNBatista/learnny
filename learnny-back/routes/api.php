@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/user/cadastrar', [UserController::class, 'store']);
 Route::post('/professor/cadastrar', [ProfessorController::class, 'store']);
+Route::put('/professor/atualizar/{id}', [ProfessorController::class, 'update']);
 
 Route::middleware('auth:api')->group(function () {
   Route::post('/logout', [AuthController::class, 'logout']);
@@ -22,9 +23,9 @@ Route::middleware('auth:api')->group(function () {
   Route::prefix('/professor')->group(function () {
     Route::get('/listar', [ProfessorController::class, 'index']);
     Route::get('/visualizar/{id}', [ProfessorController::class, 'show']);
-    Route::put('/atualizar/{id}', [ProfessorController::class, 'update']);
+    
     Route::delete('/deletar/{id}', [ProfessorController::class, 'destroy']);
-  });
+  });  
 });
 
 

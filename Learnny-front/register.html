@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnny | Cadastro de Usuário</title>
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="src/styles/main.css"> 
+    <link rel="stylesheet" href="src/styles/partials/header.css"> 
+    <link rel="stylesheet" href="src/styles/partials/forms.css"> 
+    <link rel="stylesheet" href="src/styles/partials/page-give-classes.css"> 
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+
+</head>
+<body id="page-give-classes">
+
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="index.html">
+                    <img src="public/images/icons/back.svg" alt="Voltar">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+            <div class="header-content">
+                <strong>Bem-vindo ao cadastro</strong>
+                <p>Preencha os dados abaixo para completar seu cadastro</p>
+            </div>
+        </header>
+
+        <main>
+            <form id="registerForm" method="POST">
+                <fieldset>
+                    <legend>Seus dados</legend>
+
+                    <div class="input-block">
+                        <label for="name">Nome Completo</label>
+                        <input name="name" id="name" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="email">E-mail</label>
+                        <input name="email" id="email" type="email" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="contact">Contato</label>
+                        <input name="contact" id="contact" type="text" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="password">Senha</label>
+                        <input name="password" id="password" type="password" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="password_confirmation">Confirmar Senha</label>
+                        <input name="password_confirmation" id="password_confirmation" type="password" required>
+                    </div>
+                </fieldset>
+            </form>
+
+            <footer>
+                <p>
+                    <img src="public/images/icons/warning.svg" alt="Aviso importante">
+                    importante! <br> Preencha todos os dados corretamente.
+                </p>
+                <button type="submit" form="registerForm">Salvar cadastro</button>
+            </footer>
+        </main>
+    </div> 
+
+    <div id="mensagem"></div>
+
+    <script src="public/scripts/register.js"></script>
+</body>
+</html>
