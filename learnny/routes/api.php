@@ -6,7 +6,7 @@ use App\Http\Controllers\ProfessorController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/user/cadastrar', [UserController::class, 'store']);
+Route::post('/cadastrar', [UserController::class, 'store']);
 Route::post('/professor/cadastrar', [ProfessorController::class, 'store']);
 Route::put('/professor/atualizar/{id}', [ProfessorController::class, 'update']);
 

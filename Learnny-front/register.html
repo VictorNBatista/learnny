@@ -47,7 +47,7 @@
 
                     <div class="input-block">
                         <label for="contact">Contato</label>
-                        <input name="contact" id="contact" type="text" required>
+                        <input name="contact" id="contact" type="number" required>
                     </div>
 
                     <div class="input-block">
@@ -70,9 +70,14 @@
                 <button type="submit" form="registerForm">Salvar cadastro</button>
             </footer>
         </main>
-    </div> 
 
-    <div id="mensagem"></div>
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <p id="modalMessage"></p>
+            </div>
+        </div>
+    </div> 
 
     <script src="public/scripts/register.js"></script>
 </body>
