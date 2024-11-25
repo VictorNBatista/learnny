@@ -6,8 +6,10 @@ async function cadastrarProfessor(event) {
   const photo_url = document.getElementById('avatar').value;
   const contact = document.getElementById('whatsapp').value;
   const biography = document.getElementById('bio').value;
-  const subject = document.getElementById('subject').value;
-  const price = document.getElementById('cost').value;
+  const subjectElement = document.getElementById('subject');
+  const subject = subjectElement.options[subjectElement.selectedIndex].text;
+  const price = parseFloat(document.getElementById('cost').value);
+
 
   // Dados do professor para o cadastro
   const dados = {
