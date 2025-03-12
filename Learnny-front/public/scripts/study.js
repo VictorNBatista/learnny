@@ -40,7 +40,6 @@ function exibirProfessores(professores) {
       const professorCard = document.createElement("article");
       professorCard.classList.add("teacher-item");
 
-      const price = (typeof professor.price === 'number') ? professor.price.toFixed(2) : '0.00';
 
       professorCard.innerHTML = `
           <header>
@@ -52,7 +51,7 @@ function exibirProfessores(professores) {
           </header>
           <p>${professor.biography}</p>
           <footer>
-              <p>Preço/hora <strong>R$ ${price}</strong></p>
+              <p>Preço/hora <strong>R$ ${professor.price}</strong></p>
               <a href="https://api.whatsapp.com/send?1=pt_BR&phone=${professor.contact}&text=Tenho interesse na sua aula de ${professor.subject}" target="_blank" class="button">
                   <img src="public/images/icons/whatsapp.svg" alt="Whatsapp">Entrar em contato
               </a>
