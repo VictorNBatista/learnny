@@ -15,7 +15,6 @@ class Professor extends Model
         'photo_url',
         'contact',
         'biography',
-        'subject',
         'price',
     ];
 

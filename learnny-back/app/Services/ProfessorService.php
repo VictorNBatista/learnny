@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Professor;
 use App\Repositories\ProfessorRepository;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ProfessorService
 {
@@ -25,7 +28,25 @@ class ProfessorService
 
     public function createProfessor(array $data)
     {
-        return $this->professorRepository->create($data);
+        DB::beginTransaction();
+        try {
+            $subjects = $data['subjects'];
+            unset($data['subjects']);
+
+            $professor = $this->professorRepository->create($data);
+
+            // Associa as matérias
+            $professor->subjects()->sync($subjects);
+
+            DB::commit();
+            return $professor;
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        
+        // return $this->professorRepository->create($data);
     }
 
     public function updateProfessor($id, array $data)
