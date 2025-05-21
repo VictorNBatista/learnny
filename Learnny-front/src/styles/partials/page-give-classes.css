@@ -126,6 +126,47 @@
     border-top: 1px solid var(--color-line-in-white);
 }
 
+#subjects-checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+#subjects-checkbox-list .subject-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #f8f8fc;
+  border: 1px solid #e6e6f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+#subjects-checkbox-list .subject-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  font: 1.6rem Poppins, sans-serif;
+  z-index: 1;
+  user-select: none;
+}
+
+#subjects-checkbox-list .subject-item:hover {
+  background-color: #ebebf5;
+  border-color: #dcdce5;
+}
+
+#subjects-checkbox-list input[type="checkbox"] {
+  transform: scale(1.2);
+  accent-color: #04d361; /* Verde da Learnny, se estiver usando */
+  cursor: pointer;
+}
 
 
 @media (min-width: 700px) {

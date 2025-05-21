@@ -14,6 +14,6 @@ class Subject extends Model
     // Futuro relacionamento com Professor
     public function professors()
     {
-        return $this->hasMany(Professor::class);
+        return $this->belongsToMany(Professor::class, 'professor_subject');
     }
 }

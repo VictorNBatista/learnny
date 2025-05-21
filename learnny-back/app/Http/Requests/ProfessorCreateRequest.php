@@ -18,8 +18,9 @@ class ProfessorCreateRequest extends FormRequest
             'photo_url' => 'nullable|string|url',
             'contact' => 'required|string|max:15|unique:professors,contact',
             'biography' => 'required|string',
-            'subject' => 'required|string|max:50',
-            'price' => 'required|numeric|min:0'
+            'price' => 'required|numeric|min:0',
+            'subjects' => 'required|array',
+            'subjects.*' => 'exists:subjects,id',
         ];
     }
 
