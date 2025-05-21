@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -25,7 +26,14 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/visualizar/{id}', [ProfessorController::class, 'show']);
     
     Route::delete('/deletar/{id}', [ProfessorController::class, 'destroy']);
-  });  
+  });
+  
 });
 
-
+Route::prefix('/subject')->group(function () {
+    Route::get('/', [SubjectController::class, 'index']);
+    Route::post('/', [SubjectController::class, 'store']);
+    Route::get('{id}', [SubjectController::class, 'show']);
+    Route::put('{id}', [SubjectController::class, 'update']);
+    Route::delete('{id}', [SubjectController::class, 'destroy']);
+  });

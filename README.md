@@ -1,4 +1,4 @@
-# API do Projeto Learrny
+# API do Projeto Learnny
 
 Esta API faz parte do projeto **Learrny**, uma plataforma de conexão entre alunos e professores particulares. A API oferece funcionalidades de **CRUD de usuários**, autenticação utilizando **Laravel Passport**, e gerenciamento de sessões com **tokens OAuth**.
 
@@ -27,8 +27,7 @@ Esta API faz parte do projeto **Learrny**, uma plataforma de conexão entre alun
 Clone o repositório para seu ambiente local:
 
 ```bash
-git clone https://github.com/seu-usuario/learney-api.git
-cd learney-api 
+git clone https://github.com/VictorNBatista/learnny.git
 ```
 ### 2. Instalar Dependências
 
