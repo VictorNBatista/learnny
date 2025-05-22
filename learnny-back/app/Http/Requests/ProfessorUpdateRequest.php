@@ -18,7 +18,8 @@ class ProfessorUpdateRequest extends FormRequest
             'photo_url' => 'sometimes|string|url',
             'contact' => 'sometimes|string|max:15|unique:professors,contact',
             'biography' => 'sometimes|string',
-            'subject' => 'sometimes|string|max:50',
+            'subjects' => 'sometimes|array',
+            'subjects.*' => 'exists:subjects,id',
             'price' => 'sometimes|numeric|min:0'
         ];
     }

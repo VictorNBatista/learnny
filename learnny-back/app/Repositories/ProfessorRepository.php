@@ -15,8 +15,7 @@ class ProfessorRepository
 
     public function getAll()
     {
-        return Professor::select('id', 'name', 'photo_url', 'contact', 'biography', 'subject', 'price')
-                    ->paginate(15);
+        return Professor::with('subjects:id,name')->get(); // Retorna todos os professores com os assuntos relacionados
     }
 
     public function findById($id)
