@@ -32,6 +32,9 @@ jobs:
           php-version: '8.3'
           extensions: pdo, pdo_mysql
 
+      - name: Backend Directory
+        run: cd .\learnny-back\
+        
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
