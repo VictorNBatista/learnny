@@ -31,9 +31,9 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::prefix('/subject')->group(function () {
-    Route::get('/', [SubjectController::class, 'index']);
-    Route::post('/', [SubjectController::class, 'store']);
-    Route::get('{id}', [SubjectController::class, 'show']);
-    Route::put('{id}', [SubjectController::class, 'update']);
-    Route::delete('{id}', [SubjectController::class, 'destroy']);
+    Route::get('/listar', [SubjectController::class, 'index']);
+    Route::post('/cadastrar', [SubjectController::class, 'store']);
+    Route::get('/visualizar/{id}', [SubjectController::class, 'show']);
+    Route::put('/atualizar/{id}', [SubjectController::class, 'update']);
+    Route::delete('/deletar/{id}', [SubjectController::class, 'destroy']);
   });
