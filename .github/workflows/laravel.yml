@@ -32,26 +32,28 @@ jobs:
           php-version: '8.3'
           extensions: pdo, pdo_mysql
 
-      - name: Backend Directory
-        run: cd ./learnny-back/
-        
       - name: Copy .env
+        working-directory: ./learnny-back
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Update .env with CI database credentials
-        run: |
-          sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root/' .env
+        working-directory: ./learnny-back
+        run: sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=root/' .env
 
       - name: Install Dependencies
+        working-directory: ./learnny-back
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate key
+        working-directory: ./learnny-back
         run: php artisan key:generate
 
       - name: Directory Permissions
+        working-directory: ./learnny-back
         run: chmod -R 777 storage bootstrap/cache
 
       - name: Run migrations
+        working-directory: ./learnny-back
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -62,6 +64,7 @@ jobs:
         run: php artisan migrate --force
 
       - name: Run tests
+        working-directory: ./learnny-back
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
