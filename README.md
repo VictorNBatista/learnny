@@ -162,7 +162,14 @@ php artisan test
 
 # Aplicativo Web Learnny
 
+Para acessar a aplicação, certifique-se do projeto estar dentro do diretório `C:\laragon\www` e que esteja com o laragon rodando o MySQL e Apache, juntamente com o BackEnd.
 
+No navegador acesse a URL abaixo:
+```URL
+http://learnny.test/Learnny-front/index.html
+```
+
+Após estas etapas o sistema estará pronto para rodar.
 
 ### Contribuições
 
