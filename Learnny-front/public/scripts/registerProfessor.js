@@ -8,7 +8,7 @@ async function carregarMaterias() {
   const container = document.getElementById('subjects-checkbox-list');
 
   try {
-    const resposta = await fetch('http://localhost:8000/api/subject');
+    const resposta = await fetch('http://localhost:8000/api/subject/listar');
     if (!resposta.ok) throw new Error('Erro ao carregar matérias');
 
     const materias = await resposta.json();

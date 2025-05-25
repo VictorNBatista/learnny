@@ -1,3 +1,27 @@
+:root {
+    /* variáveis CSS */
+    --color-background: #F0F0F7;                                    
+    --color-primary-lighter: #9871F5;
+    --color-primary-light: #916BEA;
+    --color-primary: #341186;
+    --color-primary-dark: #774DD6;
+    --color-primary-darker: #6842c2;
+    --color-secondary: #04D361;
+    --color-secondary-dark: #04BF58;
+    --color-title-in-primary: #FFFFFF;
+    --color-text-in-primary: #D4C2FF;
+    --color-text-title: #32264D;
+    --color-text-complement: #9C98A6;
+    --color-text-base: #6A6180;
+    --color-line-in-white: #E6E6F0;
+    --color-input-background: #F8F8FC;
+    --color-button-text: #FFFFFF;
+    --color-box-base: #FFFFFF;
+    --color-box-footer: #FAFAFC;
+    --color-small-info: #C1BCCC;
+
+}
+
 #page-study #container {
     width: 100vw;
     height: 100vh;
@@ -7,7 +31,17 @@
     background-color: #020024;
 }
 
+.search-input {
+  width: 100%;
+  margin-top: 3.2rem;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.4rem;
+}
+
 #search-teachers {
+    width: 100%;
     margin-top: 3.2rem;
 }
 
@@ -20,7 +54,8 @@
 }
 
 #search-teachers button {
-    width: 100%;
+    width: auto;
+    padding: 12px 20px;
     height: 5.6rem;
     background: var(--color-secondary);
     color: var(--color-button-text);
@@ -173,9 +208,9 @@
     }
 
     #search-teachers {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
         position: absolute;
         bottom: -28px;
     }

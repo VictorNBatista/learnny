@@ -1,6 +1,8 @@
+let professoresOriginais = []; // Lista original de professores
+
 // Função para listar todos os professores
 async function listarProfessores() {
-    const token = localStorage.getItem('token'); // Obtém o token do localStorage para autenticação
+    const token = localStorage.getItem('token');
     console.log("Token:", token);
 
     try {
@@ -15,8 +17,9 @@ async function listarProfessores() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Dados recebidos:", data); // Verifique o que a API está retornando
-                exibirProfessores(data.professores);
+                console.log("Dados recebidos:", data);
+                professoresOriginais = data.professores;
+                exibirProfessores(professoresOriginais);
             } else {
                 const errorData = await response.json();
                 console.error('Erro na resposta da API:', response.status, errorData);
@@ -33,35 +36,66 @@ async function listarProfessores() {
 
 // Função para exibir os professores no HTML
 function exibirProfessores(professores) {
-  const teacherContainer = document.querySelector("main");
-  teacherContainer.innerHTML = ''; // Limpa o contêiner de professores
+    const teacherContainer = document.querySelector("main");
+    teacherContainer.innerHTML = ''; // Limpa o contêiner
 
-  professores.forEach((professor) => {
-    const materias = professor.subjects.map(s => s.name).join(', '); // Corrigido aqui
+    professores.forEach((professor) => {
+        const materias = professor.subjects.map(s => s.name).join(', ');
 
-    const professorCard = document.createElement("article");
-    professorCard.classList.add("teacher-item");
+        const professorCard = document.createElement("article");
+        professorCard.classList.add("teacher-item");
 
-    professorCard.innerHTML = `
-        <header>
-            <img src="${professor.photo_url}" alt="${professor.name}">
-            <div>
-                <strong>${professor.name}</strong>
-                <span>${materias}</span>
-            </div>
-        </header>
-        <p>${professor.biography}</p>
-        <footer>
-            <p>Preço/hora <strong>R$ ${Number(professor.price).toFixed(2)}</strong></p>
-            <a href="https://api.whatsapp.com/send?1=pt_BR&phone=${professor.contact}&text=Tenho interesse na sua aula de ${materias}" target="_blank" class="button">
-                <img src="public/images/icons/whatsapp.svg" alt="Whatsapp">Entrar em contato
-            </a>
-        </footer>
-    `;
+        professorCard.innerHTML = `
+            <header>
+                <img src="${professor.photo_url}" alt="${professor.name}">
+                <div>
+                    <strong>${professor.name}</strong>
+                    <span>${materias}</span>
+                </div>
+            </header>
+            <p>${professor.biography}</p>
+            <footer>
+                <p>Preço/hora <strong>R$ ${Number(professor.price).toFixed(2)}</strong></p>
+                <a href="https://api.whatsapp.com/send?1=pt_BR&phone=${professor.contact}&text=Tenho interesse na sua aula de ${materias}" target="_blank" class="button">
+                    <img src="public/images/icons/whatsapp.svg" alt="Whatsapp">Entrar em contato
+                </a>
+            </footer>
+        `;
 
-    teacherContainer.appendChild(professorCard);
-  });
+        teacherContainer.appendChild(professorCard);
+    });
 }
 
-// Chama a função para listar todos os professores ao carregar a página
+// Filtro por matéria no formulário
+const formBusca = document.getElementById('search-teachers');
+const inputBusca = document.getElementById('searchSubject');
+
+function normalizarTexto(texto) {
+  return texto
+    .normalize("NFD")               // Decompõe acentos
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .toLowerCase();                 // Deixa tudo minúsculo
+}
+
+if (formBusca) {
+    formBusca.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const termo = inputBusca.value.trim().toLowerCase();
+
+        const professoresFiltrados = professoresOriginais.filter((professor) =>
+            professor.subjects.some((s) => normalizarTexto(s.name).includes(termo))
+        );
+
+        exibirProfessores(professoresFiltrados);
+    });
+
+    // Resetar a lista quando o campo for limpo
+    inputBusca.addEventListener('input', (event) => {
+        if (event.target.value.trim() === '') {
+            exibirProfessores(professoresOriginais);
+        }
+    });
+}
+
+// Executa a listagem ao carregar a página
 document.addEventListener('DOMContentLoaded', listarProfessores);
