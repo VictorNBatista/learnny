@@ -80,7 +80,12 @@ function normalizarTexto(texto) {
 if (formBusca) {
     formBusca.addEventListener('submit', (event) => {
         event.preventDefault();
-        const termo = inputBusca.value.trim().toLowerCase();
+        const termo = normalizarTexto(inputBusca.value.trim());
+
+        if (!termo) {
+            exibirProfessores(professoresOriginais);
+            return;
+        }
 
         const professoresFiltrados = professoresOriginais.filter((professor) =>
             professor.subjects.some((s) => normalizarTexto(s.name).includes(termo))

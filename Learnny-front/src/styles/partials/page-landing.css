@@ -100,14 +100,14 @@
         grid-template-columns: 2fr 1fr 2fr;
         grid-template-rows: 350px 1fr;
         grid-template-areas: 
-        "proffy image image"
+        "learnny image image"
         "button button texting";
         column-gap: 87px;
         row-gap: 86px;
     }
 
     .logo-container {
-        grid-area: proffy;
+        grid-area: learnny;
         text-align: initial;
         align-self: center;
         margin: 0;
