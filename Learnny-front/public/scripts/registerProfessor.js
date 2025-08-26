@@ -69,7 +69,8 @@ async function cadastrarProfessor(event) {
     price,
     subjects
   };
-
+  
+  console.log('Dados a serem enviados:', dados); // 👈 log dos dados
     try {
     const resposta = await fetch('http://localhost:8000/api/professor/cadastrar', {
         method: 'POST',

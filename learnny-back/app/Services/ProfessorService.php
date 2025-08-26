@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Repositories\ProfessorRepository;
 use App\Models\Professor;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ProfessorService
 {
@@ -20,17 +22,31 @@ class ProfessorService
         return $this->professorRepository->getAll();
     }
 
+    public function getProfessorById($id)
+    {
+        return $this->professorRepository->findById($id);
+    }
+
     public function createProfessor(array $data)
     {
         DB::beginTransaction();
         try {
-            $subjects = $data['subjects'];
+            // Se vier subjects, guarda, senão array vazio
+            $subjects = $data['subjects'] ?? [];
             unset($data['subjects']);
 
+            // Criptografa a senha
+            if (isset($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            }
+
+            // Cria professor
             $professor = $this->professorRepository->create($data);
 
-            // Associa as matérias
-            $professor->subjects()->sync($subjects);
+            // Associa matérias (se houver)
+            if (!empty($subjects)) {
+                $professor->subjects()->sync($subjects);
+            }
 
             DB::commit();
             return $professor;
@@ -41,36 +57,13 @@ class ProfessorService
         }
     }
 
-    public function findProfessorById($id)
-    {
-        return $this->professorRepository->findById($id);
-    }
-
     public function updateProfessor($id, array $data)
     {
-        $professor = $this->professorRepository->findById($id);
-
-        if (!$professor) {
-            return null;
-        }
-
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        }
-
-        $this->professorRepository->update($professor, $data);
-        return $professor;
+        return $this->professorRepository->update($id, $data);
     }
 
     public function deleteProfessor($id)
     {
-        $professor = $this->professorRepository->findById($id);
-
-        if (!$professor) {
-            return null;
-        }
-
-        $this->professorRepository->delete($professor);
-        return $professor;
+        return $this->professorRepository->delete($id);
     }
 }

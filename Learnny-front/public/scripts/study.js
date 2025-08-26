@@ -18,7 +18,7 @@ async function listarProfessores() {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Dados recebidos:", data);
-                professoresOriginais = data.professores;
+                professoresOriginais = data.professors;
                 exibirProfessores(professoresOriginais);
             } else {
                 const errorData = await response.json();

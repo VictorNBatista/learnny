@@ -93,31 +93,4 @@ class ProfessorController extends Controller
         ]);
     }
 
-    /**
-     * Login do professor
-     */
-   public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        if (!Auth::guard('professor')->attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'status' => 401,
-                'message' => 'Credenciais inválidas!'
-            ]);
-        }
-
-        $professor = Auth::guard('professor')->user();
-        $token = $professor->createToken('ProfessorToken')->accessToken;
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Login realizado com sucesso!',
-            'token' => $token,
-            'professor' => $professor
-        ]);
-    }
 }

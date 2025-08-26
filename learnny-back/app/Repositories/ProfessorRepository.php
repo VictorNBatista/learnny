@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
@@ -6,22 +6,21 @@ use App\Models\Professor;
 
 class ProfessorRepository
 {
+    protected $model;
+
+    public function __construct(Professor $model)
+    {
+        $this->model = $model; // Atribui o modelo Professor à propriedade $model
+    }
+
     public function getAll()
     {
-        return Professor::select('id', 'name', 'email', 'contact')
-                        ->with('subjects')
-                        ->withTrashed()
-                        ->paginate(15);
+        return Professor::with('subjects:id,name')->get(); // Retorna todos os professores com os assuntos relacionados
     }
 
     public function findById($id)
     {
-        return Professor::with('subjects')->find($id);
-    }
-
-    public function findByEmail($email)
-    {
-        return Professor::where('email', $email)->first();
+        return Professor::find($id);
     }
 
     public function create(array $data)
@@ -29,13 +28,17 @@ class ProfessorRepository
         return Professor::create($data);
     }
 
-    public function update(Professor $professor, array $data)
+    public function update($id, array $data)
     {
-        return $professor->update($data);
+        $professor = $this->model->findOrFail($id); // Encontre o professor pelo ID
+        $professor->update($data); // Atualize os dados
+        return $professor;
     }
 
-    public function delete(Professor $professor)
+    public function delete($id)
     {
-        return $professor->delete();
+        $professor = $this->model->findOrFail($id);
+        $professor->delete();
+        return $professor;
     }
 }

@@ -4,13 +4,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\ProfessorAuthController;
 use Illuminate\Support\Facades\Route;
 
 // =======================
 // AUTH (Alunos e Professores)
 // =======================
 Route::post('/login', [AuthController::class, 'login']); // Login do aluno
-Route::post('/professor/login', [ProfessorController::class, 'login']); // Login do professor
+Route::post('/professor/login', [ProfessorAuthController::class, 'login']); // Login do professor
 
 // Cadastro inicial (público)
 Route::post('/cadastrar', [UserController::class, 'store']);
@@ -21,7 +22,6 @@ Route::post('/professor/cadastrar', [ProfessorController::class, 'store']);
 // =======================
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/professor/listar', [ProfessorController::class, 'index']);
 
     Route::prefix('/user')->group(function () {
         Route::get('/listar', [UserController::class, 'index']);
@@ -35,7 +35,8 @@ Route::middleware('auth:api')->group(function () {
 // ROTAS PROTEGIDAS - PROFESSOR
 // =======================
 Route::middleware('auth:professor')->prefix('/professor')->group(function () {
-    Route::post('/logout', [ProfessorController::class, 'logout']);  
+    Route::post('/logout', [ProfessorAuthController::class, 'logout']);
+    Route::get('/listar', [ProfessorController::class, 'index']);  
     Route::get('/visualizar/{id}', [ProfessorController::class, 'show']);
     Route::put('/atualizar/{id}', [ProfessorController::class, 'update']);
     Route::delete('/deletar/{id}', [ProfessorController::class, 'destroy']);
