@@ -14,13 +14,26 @@ class ProfessorCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:100',
-            'photo_url' => 'nullable|string|url',
-            'contact' => 'required|string|max:15|unique:professors,contact',
-            'biography' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|string|email|max:255|unique:professors,email',
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+            ],
+            'password_confirmation' => 'required|same:password',
+            'photo_url'  => 'nullable|url',
+            'contact'    => 'required|string|max:20',
+            'biography'  => 'required|string',
+            'price'      => 'required|numeric|min:0',
+            
             'subjects' => 'required|array',
-            'subjects.*' => 'exists:subjects,id',
+            'subjects.*' => 'exists:subjects,id'
         ];
     }
 

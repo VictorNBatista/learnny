@@ -1,11 +1,10 @@
-<?php
+<?php 
 
 namespace App\Services;
 
-use App\Models\Professor;
 use App\Repositories\ProfessorRepository;
-use Illuminate\Support\Facades\DB;
-use Exception;
+use App\Models\Professor;
+use Illuminate\Support\Facades\Hash;
 
 class ProfessorService
 {
@@ -16,14 +15,9 @@ class ProfessorService
         $this->professorRepository = $professorRepository;
     }
 
-    public function getAllProfessors()
+    public function listProfessors()
     {
         return $this->professorRepository->getAll();
-    }
-
-    public function getProfessorById($id)
-    {
-        return $this->professorRepository->findById($id);
     }
 
     public function createProfessor(array $data)
@@ -45,17 +39,38 @@ class ProfessorService
             DB::rollBack();
             throw $e;
         }
-        
-        // return $this->professorRepository->create($data);
+    }
+
+    public function findProfessorById($id)
+    {
+        return $this->professorRepository->findById($id);
     }
 
     public function updateProfessor($id, array $data)
     {
-        return $this->professorRepository->update($id, $data);
+        $professor = $this->professorRepository->findById($id);
+
+        if (!$professor) {
+            return null;
+        }
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $this->professorRepository->update($professor, $data);
+        return $professor;
     }
 
     public function deleteProfessor($id)
     {
-        return $this->professorRepository->delete($id);
+        $professor = $this->professorRepository->findById($id);
+
+        if (!$professor) {
+            return null;
+        }
+
+        $this->professorRepository->delete($professor);
+        return $professor;
     }
 }

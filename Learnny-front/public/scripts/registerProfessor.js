@@ -46,6 +46,9 @@ async function cadastrarProfessor(event) {
   event.preventDefault();
 
   const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const password_confirmation = document.getElementById('password_confirmation').value;
   const photo_url = document.getElementById('avatar').value;
   const contact = document.getElementById('whatsapp').value;
   const biography = document.getElementById('bio').value;
@@ -57,6 +60,9 @@ async function cadastrarProfessor(event) {
 
   const dados = {
     name,
+    email,
+    password,
+    password_confirmation,
     photo_url,
     contact,
     biography,

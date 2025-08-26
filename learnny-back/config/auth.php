@@ -45,6 +45,11 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+
+        'professor' => [
+            'driver' => 'passport',
+            'provider' => 'professors',
+        ],
     ],
 
     /*
@@ -70,10 +75,10 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'professors' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_PROFESSOR_MODEL', App\Models\Professor::class),
+        ],
     ],
 
     /*

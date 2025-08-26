@@ -2,20 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
 
-class Professor extends Model
+class Professor extends Authenticatable
 {
-    use HasFactory, softDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
+        'email',
+        'password',
         'photo_url',
         'contact',
         'biography',
         'price',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     public function subjects()

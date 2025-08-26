@@ -114,6 +114,7 @@
     padding: 0 2rem;
     font-size: 1.6rem;
     line-height: 2.8rem;
+    text-align: justify;
 }
 
 .teacher-item footer {

@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('professors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('email')->unique(); // para login
+            $table->string('password'); // senha criptografada
             $table->string('photo_url')->nullable();
             $table->string('contact');
             $table->text('biography');
-            $table->string('subject');
             $table->decimal('price', 8, 2);
+            $table->rememberToken(); // suporte para autenticação
             $table->timestamps();
             $table->softDeletes();
         });
