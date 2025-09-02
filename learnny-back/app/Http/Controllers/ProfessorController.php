@@ -93,4 +93,49 @@ class ProfessorController extends Controller
         ]);
     }
 
+    /**
+     * Listar professores pendentes de aprovação
+     */
+    public function pending()
+    {
+        $professor = Professor::where('status', 'pending')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $professor
+        ], 200);
+    }
+
+    /**
+     * Aprovar professor
+     */
+    public function approve($id)
+    {
+        $professor = Professor::findOrFail($id);
+        $professor->status = 'approved';
+        $professor->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Professor aprovado com sucesso',
+            'data' => $professor
+        ], 200);
+    }
+
+    /**
+     * Reprovar professor
+     */
+    public function reject($id)
+    {
+        $professor = Professor::findOrFail($id);
+        $professor->status = 'rejected';
+        $professor->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Professor reprovado com sucesso',
+            'data' => $professor
+        ], 200);
+    }
+
 }

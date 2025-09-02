@@ -50,6 +50,11 @@ return [
             'driver' => 'passport',
             'provider' => 'professors',
         ],
+
+        'admin' => [
+            'driver' => 'passport',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -78,6 +83,11 @@ return [
         'professors' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_PROFESSOR_MODEL', App\Models\Professor::class),
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_ADMIN_MODEL', App\Models\Admin::class),
         ],
     ],
 

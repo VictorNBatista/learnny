@@ -5,6 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\ProfessorAuthController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminSubjectController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 // =======================
@@ -43,12 +46,42 @@ Route::middleware('auth:professor')->prefix('/professor')->group(function () {
 });
 
 // =======================
-// SUBJECTS
+// Subjects (público)
 // =======================
-Route::prefix('/subject')->group(function () {
-    Route::get('/listar', [SubjectController::class, 'index']);
-    Route::post('/cadastrar', [SubjectController::class, 'store']);
-    Route::get('/visualizar/{id}', [SubjectController::class, 'show']);
-    Route::put('/atualizar/{id}', [SubjectController::class, 'update']);
-    Route::delete('/deletar/{id}', [SubjectController::class, 'destroy']);
+
+Route::get('/subject/listar', [SubjectController::class, 'index']);
+
+// =======================
+// ADMINS
+// =======================
+Route::prefix('admin')->group(function () {
+    // Auth
+    Route::post('/cadastrar', [AdminController::class, 'store']);
+    Route::post('/login', [AdminAuthController::class, 'login']);
+
+    Route::middleware('auth:admin')->group(function () {
+        Route::post('/logout', [AdminAuthController::class, 'logout']);
+
+        // CRUD de admins
+        Route::get('/listar', [AdminController::class, 'index']);
+        Route::get('/visualizar/{id}', [AdminController::class, 'show']);
+        Route::put('/atualizar/{id}', [AdminController::class, 'update']);
+        Route::delete('/deletar/{id}', [AdminController::class, 'destroy']);
+
+        // Subjects (somente admin pode gerenciar)
+        Route::prefix('/subjects')->group(function () {
+            Route::get('/listar', [AdminSubjectController::class, 'index']);
+            Route::post('/cadastrar', [AdminSubjectController::class, 'store']);
+            Route::get('/visualizar/{id}', [AdminSubjectController::class, 'show']);
+            Route::put('/atualizar/{id}', [AdminSubjectController::class, 'update']);
+            Route::delete('/deletar/{id}', [AdminSubjectController::class, 'destroy']);
+        });
+
+        // Aprovação/Reprovação de Professores
+        Route::prefix('/professores')->group(function () {
+            Route::get('/pendentes', [ProfessorController::class, 'pending']); // listar professores aguardando aprovação
+            Route::put('/aprovar/{id}', [ProfessorController::class, 'approve']);
+            Route::put('/reprovar/{id}', [ProfessorController::class, 'reject']);
+        });
+    });
 });
