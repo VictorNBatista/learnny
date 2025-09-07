@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminCreateRequest extends FormRequest
+class AdminUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -13,21 +13,20 @@ class AdminCreateRequest extends FormRequest
 
     public function rules(): array
     {
+        $adminId = $this->route('id'); 
+
         return [
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:admins,email',
-            'password' => 'required|string|min:6|confirmed',
+            'name'     => 'sometimes|string|max:255',
+            'email'    => 'sometimes|email|unique:admins,email,' . $adminId,
+            'password' => 'nullable|string|min:6|confirmed',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required'     => 'O nome é obrigatório.',
-            'email.required'    => 'O e-mail é obrigatório.',
             'email.email'       => 'O e-mail informado não é válido.',
             'email.unique'      => 'Este e-mail já está em uso.',
-            'password.required' => 'A senha é obrigatória.',
             'password.min'      => 'A senha deve ter no mínimo 6 caracteres.',
             'password.confirmed'=> 'As senhas não conferem.',
         ];

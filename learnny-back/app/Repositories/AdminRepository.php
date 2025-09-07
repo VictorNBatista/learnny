@@ -13,7 +13,7 @@ class AdminRepository
 
     public function findById($id)
     {
-        return Admin::findOrFail($id);
+        return Admin::find($id);
     }
 
     public function create(array $data)
@@ -21,14 +21,25 @@ class AdminRepository
         return Admin::create($data);
     }
 
-    public function update(Admin $admin, array $data)
+    public function update($id, array $data)
     {
+        $admin = Admin::find($id);
+        if (!$admin) {
+            return null;
+        }
+
         $admin->update($data);
         return $admin;
     }
 
-    public function delete(Admin $admin)
+    public function delete($id)
     {
-        return $admin->delete();
+        $admin = Admin::find($id);
+        if (!$admin) {
+            return null;
+        }
+
+        $admin->delete();
+        return $admin;
     }
 }

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Repositories\AdminRepository;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AdminService
 {
@@ -27,24 +26,24 @@ class AdminService
 
     public function create(array $data)
     {
-        // $data['password'] = Hash::make($data['password']);
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         return $this->adminRepository->create($data);
     }
 
     public function update($id, array $data)
     {
-        $admin = $this->adminRepository->findById($id);
-
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 
-        return $this->adminRepository->update($admin, $data);
+        return $this->adminRepository->update($id, $data);
     }
 
     public function delete($id)
     {
-        $admin = $this->adminRepository->findById($id);
-        return $this->adminRepository->delete($admin);
+        return $this->adminRepository->delete($id);
     }
 }

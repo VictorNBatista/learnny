@@ -10,28 +10,28 @@ class ProfessorRepository
 
     public function __construct(Professor $model)
     {
-        $this->model = $model; // Atribui o modelo Professor à propriedade $model
+        $this->model = $model;
     }
 
     public function getAll()
     {
-        return Professor::with('subjects:id,name')->get(); // Retorna todos os professores com os assuntos relacionados
+        return $this->model->with('subjects:id,name')->get();
     }
 
     public function findById($id)
     {
-        return Professor::find($id);
+        return $this->model->find($id);
     }
 
     public function create(array $data)
     {
-        return Professor::create($data);
+        return $this->model->create($data);
     }
 
     public function update($id, array $data)
     {
-        $professor = $this->model->findOrFail($id); // Encontre o professor pelo ID
-        $professor->update($data); // Atualize os dados
+        $professor = $this->model->findOrFail($id);
+        $professor->update($data);
         return $professor;
     }
 
@@ -39,6 +39,24 @@ class ProfessorRepository
     {
         $professor = $this->model->findOrFail($id);
         $professor->delete();
+        return $professor;
+    }
+
+    public function getPendingProfessors()
+    {
+        return $this->model->where('status', 'pending')->get();
+    }
+
+    public function updateStatus($id, $status)
+    {
+        $professor = $this->model->find($id);
+        if (!$professor) {
+            return null;
+        }
+
+        $professor->status = $status;
+        $professor->save();
+
         return $professor;
     }
 }

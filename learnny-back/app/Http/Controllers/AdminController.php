@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Requests\AdminCreateRequest;
+use App\Http\Requests\AdminUpdateRequest;
 use App\Services\AdminService;
 
 class AdminController extends Controller
@@ -18,25 +18,30 @@ class AdminController extends Controller
 
     public function index()
     {
-        return response()->json($this->adminService->getAll());
+        $admins = $this->adminService->getAll();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Admins encontrados!',
+            'data' => $admins
+        ]);
     }
 
     public function store(AdminCreateRequest $request)
     {
-
         $admin = $this->adminService->create($request->validated());
 
         return response()->json([
-            'status' => 200,
-            'message' => 'Admin cadastrado com sucesso!',
-            'user' => $admin
-        ]);
+            'status' => true,
+            'message' => 'Administrador criado com sucesso!',
+            'data' => $admin
+        ], 201);
     }
 
     public function show($id)
     {
         $admin = $this->adminService->findById($id);
-        
+
         if (!$admin) {
             return response()->json([
                 'status' => 404,
@@ -47,27 +52,32 @@ class AdminController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Admin encontrado!',
-            'user' => $admin
+            'data' => $admin
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(AdminUpdateRequest $request, $id)
     {
-        $request->validate([
-            'name'     => 'sometimes|string|max:255',
-            'email'    => 'sometimes|email|unique:admins,email,' . $id,
-            'password' => 'sometimes|string|min:6',
+        $admin = $this->adminService->update($id, $request->validated());
+
+        if (!$admin) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Administrador não encontrado.'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Administrador atualizado com sucesso!',
+            'data' => $admin
         ]);
-
-        $admin = $this->adminService->update($id, $request->all());
-
-        return response()->json($admin);
     }
 
     public function destroy($id)
     {
-        $this->adminService->delete($id);
-        
+        $admin = $this->adminService->delete($id);
+
         if (!$admin) {
             return response()->json([
                 'status' => 404,

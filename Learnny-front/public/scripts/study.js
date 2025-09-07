@@ -18,7 +18,11 @@ async function listarProfessores() {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Dados recebidos:", data);
-                professoresOriginais = data.professors;
+
+                // Filtrando apenas professores aprovados
+                professoresOriginais = data.data.filter(
+                    professor => professor.status === 'approved'
+                );
                 exibirProfessores(professoresOriginais);
             } else {
                 const errorData = await response.json();

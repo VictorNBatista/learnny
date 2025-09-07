@@ -1,13 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Professor;
 use App\Http\Requests\ProfessorCreateRequest;
 use App\Http\Requests\ProfessorUpdateRequest;
 use App\Services\ProfessorService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProfessorController extends Controller
 {
@@ -25,7 +23,7 @@ class ProfessorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Professores encontrados!',
-            'professors' => $professors
+            'data' => $professors
         ]);
     }
 
@@ -35,8 +33,8 @@ class ProfessorController extends Controller
 
         return response()->json([
             'status' => 201,
-            'message' => 'Professor cadastrado com sucesso!',
-            'professor' => $professor
+            'message' => 'Professor cadastrado com sucesso! Aguarde a aprovação de um administrador.',
+            'data' => $professor
         ]);
     }
 
@@ -54,7 +52,7 @@ class ProfessorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Professor encontrado!',
-            'professor' => $professor
+            'data' => $professor
         ]);
     }
 
@@ -72,7 +70,7 @@ class ProfessorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Professor atualizado com sucesso!',
-            'professor' => $professor
+            'data' => $professor
         ]);
     }
 
@@ -98,12 +96,13 @@ class ProfessorController extends Controller
      */
     public function pending()
     {
-        $professor = Professor::where('status', 'pending')->get();
+        $professors = $this->professorService->listPendingProfessors();
 
         return response()->json([
-            'success' => true,
-            'data' => $professor
-        ], 200);
+            'status' => 200,
+            'message' => 'Professores pendentes encontrados!',
+            'data' => $professors
+        ]);
     }
 
     /**
@@ -111,15 +110,20 @@ class ProfessorController extends Controller
      */
     public function approve($id)
     {
-        $professor = Professor::findOrFail($id);
-        $professor->status = 'approved';
-        $professor->save();
+        $professor = $this->professorService->approveProfessor($id);
+
+        if (!$professor) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Professor não encontrado!'
+            ]);
+        }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Professor aprovado com sucesso',
+            'status' => 200,
+            'message' => 'Professor aprovado com sucesso!',
             'data' => $professor
-        ], 200);
+        ]);
     }
 
     /**
@@ -127,15 +131,19 @@ class ProfessorController extends Controller
      */
     public function reject($id)
     {
-        $professor = Professor::findOrFail($id);
-        $professor->status = 'rejected';
-        $professor->save();
+        $professor = $this->professorService->rejectProfessor($id);
+
+        if (!$professor) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Professor não encontrado!'
+            ]);
+        }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Professor reprovado com sucesso',
+            'status' => 200,
+            'message' => 'Professor reprovado com sucesso!',
             'data' => $professor
-        ], 200);
+        ]);
     }
-
 }

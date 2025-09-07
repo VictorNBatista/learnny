@@ -54,7 +54,7 @@ Route::get('/subject/listar', [SubjectController::class, 'index']);
 // =======================
 // ADMINS
 // =======================
-Route::prefix('admin')->group(function () {
+Route::prefix('/admin')->group(function () {
     // Auth
     Route::post('/cadastrar', [AdminController::class, 'store']);
     Route::post('/login', [AdminAuthController::class, 'login']);

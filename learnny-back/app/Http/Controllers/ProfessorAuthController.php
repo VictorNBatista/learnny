@@ -35,6 +35,10 @@ class ProfessorAuthController extends Controller
             ]);
         }
 
+        if ($professor->status !== 'approved') {
+            return ['error' => 'Seu cadastro ainda não foi aprovado por um administrador.', 'status' => 403];
+        }
+
         $token = $professor->createToken('ProfessorToken')->accessToken;
 
         return response()->json([
