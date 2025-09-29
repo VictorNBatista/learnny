@@ -1,0 +1,523 @@
+#page-admin-professors #container {
+    width: 100vw;
+    height: 100vh;
+}
+
+#page-admin-professors main {
+    background: var(--color-background);
+    width: 100%;
+    margin-top: -6.0rem;
+    padding: 4.0rem 2.0rem;
+    min-height: calc(100vh - 24rem);
+}
+
+.tabs-container {
+    max-width: 74rem;
+    margin: 0 auto 3.2rem;
+}
+
+.tabs {
+    display: flex;
+    background: var(--color-box-base);
+    border-radius: 0.8rem;
+    border: 1px solid var(--color-line-in-white);
+    overflow: hidden;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1.6rem 2.4rem;
+    background: none;
+    border: none;
+    font: 600 1.4rem Archivo;
+    color: var(--color-text-complement);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid var(--color-line-in-white);
+}
+
+.tab-button:last-child {
+    border-right: none;
+}
+
+.tab-button.active {
+    background: var(--color-primary);
+    color: var(--color-title-in-primary);
+}
+
+.tab-button:hover:not(.active) {
+    background: var(--color-box-footer);
+}
+
+.tab-content {
+    display: none;
+    max-width: 74rem;
+    margin: 0 auto;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.4rem;
+}
+
+.section-header h2 {
+    font: 700 2.4rem Archivo;
+    color: var(--color-text-title);
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-container input {
+    width: 30rem;
+    height: 4.8rem;
+    padding: 0 1.6rem 0 4.8rem;
+    border: 1px solid var(--color-line-in-white);
+    border-radius: 0.8rem;
+    background: var(--color-input-background);
+    font-size: 1.4rem;
+}
+
+.search-container img {
+    position: absolute;
+    left: 1.6rem;
+    width: 2.0rem;
+    height: 2.0rem;
+    opacity: 0.6;
+}
+
+.professors-list {
+    background: var(--color-box-base);
+    border-radius: 0.8rem;
+    border: 1px solid var(--color-line-in-white);
+    padding: 2.4rem;
+}
+
+.professor-item {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    padding: 2.4rem;
+    border-bottom: 1px solid var(--color-line-in-white);
+    transition: background 0.2s;
+}
+
+.professor-item:last-child {
+    border-bottom: none;
+}
+
+.professor-item:hover {
+    background: var(--color-box-footer);
+}
+
+.professor-photo {
+    width: 8.0rem;
+    height: 8.0rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--color-line-in-white);
+}
+
+.professor-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.professor-info {
+    flex: 1;
+}
+
+.professor-name {
+    font: 700 1.8rem Archivo;
+    color: var(--color-text-title);
+    margin-bottom: 0.4rem;
+}
+
+.professor-email {
+    font-size: 1.4rem;
+    color: var(--color-text-complement);
+    margin-bottom: 0.8rem;
+}
+
+.professor-subjects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.subject-tag {
+    background: var(--color-primary-lighter);
+    color: var(--color-title-in-primary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 1.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.professor-price {
+    font: 600 1.6rem Poppins;
+    color: var(--color-secondary);
+}
+
+.professor-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    flex-shrink: 0;
+}
+
+.btn-view {
+    background: var(--color-primary-lighter);
+    color: var(--color-button-text);
+    border: none;
+    padding: 1.0rem 2.0rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font: 600 1.4rem Archivo;
+    transition: all 0.2s;
+}
+
+.btn-view:hover {
+    background: var(--color-primary-light);
+}
+
+.btn-approve {
+    background: var(--color-secondary);
+    color: var(--color-button-text);
+    border: none;
+    padding: 1.0rem 2.0rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font: 600 1.4rem Archivo;
+    transition: all 0.2s;
+}
+
+.btn-approve:hover {
+    background: var(--color-secondary-dark);
+}
+
+.btn-reject {
+    background: #e74c3c;
+    color: var(--color-button-text);
+    border: none;
+    padding: 1.0rem 2.0rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font: 600 1.4rem Archivo;
+    transition: all 0.2s;
+}
+
+.btn-reject:hover {
+    background: #c0392b;
+}
+
+.loading {
+    text-align: center;
+    padding: 4.0rem;
+    color: var(--color-text-complement);
+    font-style: italic;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4.0rem;
+    color: var(--color-text-complement);
+}
+
+.empty-state img {
+    width: 8.0rem;
+    height: 8.0rem;
+    opacity: 0.3;
+    margin-bottom: 1.6rem;
+}
+
+.message {
+    margin-top: 1.6rem;
+    padding: 1.2rem;
+    border-radius: 0.4rem;
+    font-size: 1.4rem;
+    display: none;
+}
+
+.message.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--color-box-base);
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 0.8rem;
+    width: 90%;
+    max-width: 50rem;
+    position: relative;
+    animation: modalShow 0.3s ease;
+}
+
+.modal-large {
+    max-width: 70rem;
+}
+
+@keyframes modalShow {
+    from {
+        opacity: 0;
+        transform: translateY(-3rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 2.4rem 3.2rem 1.6rem;
+    border-bottom: 1px solid var(--color-line-in-white);
+    position: relative;
+}
+
+.modal-header h3 {
+    font: 700 2.0rem Archivo;
+    color: var(--color-text-title);
+    margin: 0;
+}
+
+.close {
+    color: var(--color-text-complement);
+    float: right;
+    font-size: 2.8rem;
+    font-weight: bold;
+    position: absolute;
+    right: 2.4rem;
+    top: 1.6rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: var(--color-text-title);
+}
+
+.professor-details {
+    padding: 2.4rem 3.2rem;
+    display: flex;
+    gap: 2.4rem;
+}
+
+.professor-details .professor-photo {
+    width: 12.0rem;
+    height: 12.0rem;
+}
+
+.professor-details .professor-info {
+    flex: 1;
+}
+
+.professor-details .professor-info h4 {
+    font: 700 2.4rem Archivo;
+    color: var(--color-text-title);
+    margin-bottom: 1.6rem;
+}
+
+.professor-details .professor-info p {
+    margin-bottom: 1.2rem;
+    font-size: 1.4rem;
+    color: var(--color-text-base);
+    line-height: 2.0rem;
+}
+
+.professor-details .professor-info p strong {
+    color: var(--color-text-title);
+}
+
+.subjects-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.modal-content p {
+    padding: 2.4rem 3.2rem 1.6rem;
+    color: var(--color-text-base);
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+}
+
+.modal-actions {
+    padding: 1.6rem 3.2rem 2.4rem;
+    display: flex;
+    gap: 1.6rem;
+    justify-content: flex-end;
+}
+
+.button {
+    background: var(--color-secondary);
+    color: var(--color-button-text);
+    border: 0;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    font: 600 1.6rem Archivo;
+    padding: 1.2rem 2.4rem;
+    transition: background 0.2s;
+}
+
+.button:hover {
+    background: var(--color-secondary-dark);
+}
+
+.button-cancel {
+    background: var(--color-text-complement);
+    color: var(--color-button-text);
+    border: 0;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    font: 600 1.6rem Archivo;
+    padding: 1.2rem 2.4rem;
+    transition: background 0.2s;
+}
+
+.button-cancel:hover {
+    background: #8A7CA8;
+}
+
+.button-danger {
+    background: #e74c3c;
+    color: var(--color-button-text);
+    border: 0;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    font: 600 1.6rem Archivo;
+    padding: 1.2rem 2.4rem;
+    transition: background 0.2s;
+}
+
+.button-danger:hover {
+    background: #c0392b;
+}
+
+@media (min-width: 700px) {
+    #page-admin-professors #container {
+        max-width: 100vw;
+    }
+
+    .page-header {
+        height: 340px;
+    }
+
+    .page-header .top-bar-container {
+        max-width: 1100px;
+    }
+
+    .page-header .top-bar-container img {
+        height: 4rem;
+    }
+
+    .page-header .header-content {
+        max-width: 740px;
+
+        margin: 0 auto;
+
+        flex: 1 1;
+        padding-bottom: 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .page-header .header-content strong {
+        max-width: 350px;
+    }
+
+    .page-header .header-content p {
+        font-size: 1.6rem;
+        line-height: 2.6rem;
+        color: var(--color-text-in-primary);
+        margin-top: 2.4rem;
+    }
+
+    #page-admin-professors main {
+        padding: 6.4rem 2.0rem;
+    }
+
+    .search-container input {
+        width: 35rem;
+    }
+
+    .section-header {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 699px) {
+    .section-header {
+        flex-direction: column;
+        gap: 1.6rem;
+        align-items: stretch;
+    }
+
+    .search-container {
+        justify-content: center;
+    }
+
+    .search-container input {
+        width: 100%;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .professor-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .professor-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .professor-details {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .tab-button {
+        font-size: 1.2rem;
+        padding: 1.2rem 1.6rem;
+    }
+}

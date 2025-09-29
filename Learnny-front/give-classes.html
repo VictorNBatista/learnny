@@ -46,14 +46,24 @@
                 </div>
 
                 <div class="input-block">
-                        <label for="password">Senha</label>
-                        <input name="password" id="password" type="password" required>
+                    <label for="password">Senha</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required>
+                        <span class="toggle-password">
+                            <img src="public/images/icons/eye.svg" alt="Mostrar senha" class="eye-icon">
+                        </span>
                     </div>
-
-                    <div class="input-block">
-                        <label for="password_confirmation">Confirmar Senha</label>
-                        <input name="password_confirmation" id="password_confirmation" type="password" required>
+                </div>
+                    
+                <div class="input-block">
+                    <label for="password_confirmation">Confirmar Senha</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password_confirmation" name="password_confirmation" required>
+                        <span class="toggle-password">
+                            <img src="public/images/icons/eye.svg" alt="Mostrar senha" class="eye-icon">
+                        </span>
                     </div>
+                </div>
 
                 <div class="input-block">
                     <label for="avatar">Link da sua foto <small>(comece com https://)</small></label>
@@ -101,5 +111,6 @@
     </div> 
     
     <script src="public/scripts/registerProfessor.js" defer></script>
+    <script src="public/scripts/togglePassword.js"></script>
 </body>
 </html>

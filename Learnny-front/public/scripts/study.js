@@ -2,7 +2,7 @@ let professoresOriginais = []; // Lista original de professores
 
 // Função para listar todos os professores
 async function listarProfessores() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('userToken');
     console.log("Token:", token);
 
     try {
@@ -19,10 +19,7 @@ async function listarProfessores() {
                 const data = await response.json();
                 console.log("Dados recebidos:", data);
 
-                // Filtrando apenas professores aprovados
-                professoresOriginais = data.data.filter(
-                    professor => professor.status === 'approved'
-                );
+                professoresOriginais = data.data
                 exibirProfessores(professoresOriginais);
             } else {
                 const errorData = await response.json();

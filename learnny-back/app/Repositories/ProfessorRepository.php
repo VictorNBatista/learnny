@@ -15,12 +15,15 @@ class ProfessorRepository
 
     public function getAll()
     {
-        return $this->model->with('subjects:id,name')->get();
+        return $this->model
+        ->with('subjects:id,name')
+        ->where('status', 'approved') // filtra apenas professores aprovados
+        ->get();
     }
 
     public function findById($id)
     {
-        return $this->model->find($id);
+        return $this->model->with('subjects:id,name')->find($id);
     }
 
     public function create(array $data)
@@ -44,7 +47,10 @@ class ProfessorRepository
 
     public function getPendingProfessors()
     {
-        return $this->model->where('status', 'pending')->get();
+        return $this->model
+        ->with('subjects:id,name')
+        ->where('status', 'pending') // filtra apenas professores pendentes
+        ->get();
     }
 
     public function updateStatus($id, $status)

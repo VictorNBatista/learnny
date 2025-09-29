@@ -20,12 +20,20 @@ class Professor extends Authenticatable
         'contact',
         'biography',
         'price',
+        'status',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
 
     public function subjects()
     {

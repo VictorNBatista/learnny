@@ -38,17 +38,19 @@ Route::middleware('auth:api')->group(function () {
 // ROTAS PROTEGIDAS - PROFESSOR
 // =======================
 Route::middleware('auth:professor')->prefix('/professor')->group(function () {
-    Route::post('/logout', [ProfessorAuthController::class, 'logout']);
-    Route::get('/listar', [ProfessorController::class, 'index']);  
-    Route::get('/visualizar/{id}', [ProfessorController::class, 'show']);
+    Route::post('/logout', [ProfessorAuthController::class, 'logout']); 
+    Route::get('/me', [ProfessorController::class, 'me']);
     Route::put('/atualizar/{id}', [ProfessorController::class, 'update']);
     Route::delete('/deletar/{id}', [ProfessorController::class, 'destroy']);
 });
 
 // =======================
+// Professor (público)
+// =======================
+Route::get('professor/listar', [ProfessorController::class, 'index']); 
+// =======================
 // Subjects (público)
 // =======================
-
 Route::get('/subject/listar', [SubjectController::class, 'index']);
 
 // =======================
@@ -80,8 +82,9 @@ Route::prefix('/admin')->group(function () {
         // Aprovação/Reprovação de Professores
         Route::prefix('/professores')->group(function () {
             Route::get('/pendentes', [ProfessorController::class, 'pending']); // listar professores aguardando aprovação
-            Route::put('/aprovar/{id}', [ProfessorController::class, 'approve']);
-            Route::put('/reprovar/{id}', [ProfessorController::class, 'reject']);
+            Route::put('/aprovar/{id}', [ProfessorController::class, 'approve']); // aprovar professor
+            Route::put('/reprovar/{id}', [ProfessorController::class, 'reject']); // reprovar professor
+            Route::get('/visualizar/{id}', [ProfessorController::class, 'show']); // visualizar detalhes do professor
         });
     });
 });

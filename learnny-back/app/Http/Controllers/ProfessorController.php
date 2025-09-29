@@ -56,6 +56,24 @@ class ProfessorController extends Controller
         ]);
     }
 
+    public function me()
+    {
+        $professor = $this->professorService->findMe();
+        
+        if (!$professor) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Professor não encontrado!'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Professor encontrado!',
+            'data' => $professor
+        ]);
+    }
+
     public function update(ProfessorUpdateRequest $request, $id)
     {
         $professor = $this->professorService->updateProfessor($id, $request->validated());
@@ -97,6 +115,13 @@ class ProfessorController extends Controller
     public function pending()
     {
         $professors = $this->professorService->listPendingProfessors();
+
+        if ($professors->isEmpty()) {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Nenhum professor pendente encontrado!'
+        ]);
+        }   
 
         return response()->json([
             'status' => 200,

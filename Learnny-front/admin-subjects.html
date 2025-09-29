@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#8257E5">
+    <title>Learnny | Gerenciar Matérias</title>
+
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="src/styles/main.css"> 
+    <link rel="stylesheet" href="src/styles/partials/header.css">
+    <link rel="stylesheet" href="src/styles/partials/forms.css">
+    <link rel="stylesheet" href="src/styles/partials/admin-subjects.css"> 
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+
+</head>
+<body id="page-admin-subjects">
+
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="admin.html">
+                    <img src="public/images/icons/back.svg" alt="Voltar">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+
+            <div class="header-content">
+                <strong>Gerenciar Matérias</strong>
+                <p>Adicione, edite ou remova matérias da plataforma</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="add-subject-section">
+                <h2>Adicionar Nova Matéria</h2>
+                <form id="addSubjectForm">
+                    <div class="input-block">
+                        <label for="subjectName">Nome da Matéria</label>
+                        <input type="text" id="subjectName" name="name" required placeholder="Ex: Matemática, Português, História...">
+                    </div>
+                    <button type="submit" class="button">Adicionar Matéria</button>
+                </form>
+                <div id="add-message" class="message"></div>
+            </div>
+
+            <div class="subjects-list-section">
+                <div class="section-header">
+                    <h2>Matérias Cadastradas</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchSubject" placeholder="Buscar matéria...">
+                        <img src="public/images/icons/search.svg" alt="Buscar">
+                    </div>
+                </div>
+
+                <div id="subjectsList" class="subjects-list">
+                    <!-- Lista de matérias será carregada aqui -->
+                    <div class="loading">Carregando matérias...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Matéria</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="editSubjectForm">
+                <input type="hidden" id="editSubjectId">
+                <div class="input-block">
+                    <label for="editSubjectName">Nome da Matéria</label>
+                    <input type="text" id="editSubjectName" name="name" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="button-cancel" onclick="closeEditModal()">Cancelar</button>
+                    <button type="submit" class="button">Salvar Alterações</button>
+                </div>
+            </form>
+            <div id="edit-message" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Exclusão</h3>
+                <span class="close">&times;</span>
+            </div>
+            <p>Tem certeza que deseja excluir esta matéria?</p>
+            <p><strong id="deleteSubjectName"></strong></p>
+            <div class="modal-actions">
+                <button type="button" class="button-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="button" class="button-danger" onclick="confirmDelete()">Excluir</button>
+            </div>
+            <div id="delete-message" class="message"></div>
+        </div>
+    </div>
+
+    <script src="public/scripts/admin-subjects.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#8257E5">
+    <title>Learnny | Gerenciar Professores</title>
+
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="src/styles/main.css"> 
+    <link rel="stylesheet" href="src/styles/partials/header.css">
+    <link rel="stylesheet" href="src/styles/partials/forms.css">
+    <link rel="stylesheet" href="src/styles/partials/admin-professors.css"> 
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+
+</head>
+<body id="page-admin-professors">
+
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="admin.html">
+                    <img src="public/images/icons/back.svg" alt="Voltar">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+
+            <div class="header-content">
+                <strong>Gerenciar Professores</strong>
+                <p>Aprove, gerencie ou remova professores da plataforma</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-button active" onclick="showTab('pending')">Pendentes de Aprovação</button>
+                    <button class="tab-button" onclick="showTab('approved')">Professores Aprovados</button>
+                </div>
+            </div>
+
+            <!-- Tab Professores Pendentes -->
+            <div id="pending-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2>Professores Aguardando Aprovação</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchPending" placeholder="Buscar professor...">
+                        <img src="public/images/icons/search.svg" alt="Buscar">
+                    </div>
+                </div>
+
+                <div id="pendingProfessorsList" class="professors-list">
+                    <!-- Lista de professores pendentes será carregada aqui -->
+                    <div class="loading">Carregando professores pendentes...</div>
+                </div>
+            </div>
+
+            <!-- Tab Professores Aprovados -->
+            <div id="approved-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>Professores Aprovados</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchApproved" placeholder="Buscar professor...">
+                        <img src="public/images/icons/search.svg" alt="Buscar">
+                    </div>
+                </div>
+
+                <div id="approvedProfessorsList" class="professors-list">
+                    <!-- Lista de professores aprovados será carregada aqui -->
+                    <div class="loading">Carregando professores aprovados...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Detalhes do Professor -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Detalhes do Professor</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="professor-details">
+                <div class="professor-photo">
+                    <img id="professorPhoto" src="" alt="Foto do Professor">
+                </div>
+                <div class="professor-info">
+                    <h4 id="professorName"></h4>
+                    <p><strong>Email:</strong> <span id="professorEmail"></span></p>
+                    <p><strong>Contato:</strong> <span id="professorContact"></span></p>
+                    <p><strong>Preço por hora:</strong> R$ <span id="professorPrice"></span></p>
+                    <p><strong>Biografia:</strong></p>
+                    <p id="professorBiography"></p>
+                    <p><strong>Matérias:</strong></p>
+                    <div id="professorSubjects" class="subjects-tags"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="button-cancel" onclick="closeDetailsModal()">Fechar</button>
+                <button type="button" class="button-danger" id="rejectBtn" onclick="rejectProfessor()">Reprovar</button>
+                <button type="button" class="button" id="approveBtn" onclick="approveProfessor()">Aprovar</button>
+            </div>
+            <div id="details-message" class="message"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirmTitle"></h3>
+                <span class="close">&times;</span>
+            </div>
+            <p id="confirmMessage"></p>
+            <div class="modal-actions">
+                <button type="button" class="button-cancel" onclick="closeConfirmModal()">Cancelar</button>
+                <button type="button" id="confirmActionBtn" class="button">Confirmar</button>
+            </div>
+            <div id="confirm-message" class="message"></div>
+        </div>
+    </div>
+
+    <script src="public/scripts/admin-professors.js"></script>
+</body>
+</html>

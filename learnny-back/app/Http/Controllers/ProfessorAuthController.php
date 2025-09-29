@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Professor;
 use Laravel\Passport\TokenRepository;
+use App\Models\Professor;
 
 class ProfessorAuthController extends Controller
 {
@@ -16,9 +16,6 @@ class ProfessorAuthController extends Controller
         $this->tokenRepository = $tokenRepository;
     }
 
-    /**
-     * Login do professor
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -26,7 +23,7 @@ class ProfessorAuthController extends Controller
             'password' => 'required',
         ]);
 
-        $professor = Professor::where('email', $request->email)->first();
+        $professor = Professor::where('email', strtolower($request->email))->first();
 
         if (!$professor || !Hash::check($request->password, $professor->password)) {
             return response()->json([
@@ -36,22 +33,21 @@ class ProfessorAuthController extends Controller
         }
 
         if ($professor->status !== 'approved') {
-            return ['error' => 'Seu cadastro ainda não foi aprovado por um administrador.', 'status' => 403];
+            return response()->json([
+                'status'  => 403,
+                'message' => 'Seu cadastro ainda não foi aprovado por um administrador.'
+            ]);
         }
 
-        $token = $professor->createToken('ProfessorToken')->accessToken;
+        $professor->token = $professor->createToken($professor->email)->accessToken;
 
         return response()->json([
             'status'    => 200,
             'message'   => 'Login realizado com sucesso!',
-            'token'     => $token,
             'professor' => $professor
         ]);
     }
 
-    /**
-     * Logout do professor
-     */
     public function logout(Request $request)
     {
         $tokenId = $request->user()->token()->id;

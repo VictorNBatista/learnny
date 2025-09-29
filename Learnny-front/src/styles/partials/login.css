@@ -36,3 +36,29 @@ h1{
   text-decoration: none;
   font-weight: bold;
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 3rem; /* espaço para o SVG */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password img {
+    width: 1.8rem; /* ajuste conforme necessário */
+    height: 1.8rem;
+    margin-top: 0.7rem;
+}

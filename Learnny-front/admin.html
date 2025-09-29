@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#8257E5">
+    <title>Learnny | Painel Administrativo</title>
+
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="src/styles/main.css"> 
+    <link rel="stylesheet" href="src/styles/partials/header.css">
+    <link rel="stylesheet" href="src/styles/partials/admin-panel.css"> 
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+
+</head>
+<body id="page-admin">
+
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="index.html">
+                    <img src="public/images/icons/back.svg" alt="Voltar" id="logout-btn">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+
+            <div class="header-content">
+                <strong>Painel Administrativo</strong>
+                <p>Gerencie matérias e professores da plataforma</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="admin-cards">
+                <div class="admin-card" onclick="location.href='admin-subjects.html'">
+                    <div class="card-icon">
+                        <img src="public/images/icons/study.svg" alt="Matérias">
+                    </div>
+                    <div class="card-content">
+                        <h3>Gerenciar Matérias</h3>
+                        <p>Adicione, edite ou remova matérias da plataforma</p>
+                    </div>
+                    <div class="card-arrow">
+                        <img src="public/images/icons/arrow-right.svg" alt="Acessar">
+                    </div>
+                </div>
+
+                <div class="admin-card" onclick="location.href='admin-professors.html'">
+                    <div class="card-icon">
+                        <img src="public/images/icons/give-classes.svg" alt="Professores">
+                    </div>
+                    <div class="card-content">
+                        <h3>Gerenciar Professores</h3>
+                        <p>Aprove, gerencie ou remova professores da plataforma</p>
+                    </div>
+                    <div class="card-arrow">
+                        <img src="public/images/icons/arrow-right.svg" alt="Acessar">
+                    </div>
+                </div>
+
+                <div class="admin-card" onclick="location.href='admin-dashboard.html'">
+                    <div class="card-icon">
+                        <img src="public/images/icons/dashboard.svg" alt="Dashboard">
+                    </div>
+                    <div class="card-content">
+                        <h3>Dashboard</h3>
+                        <p>Visualize estatísticas e relatórios da plataforma</p>
+                    </div>
+                    <div class="card-arrow">
+                        <img src="public/images/icons/arrow-right.svg" alt="Acessar">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="public/scripts/admin.js"></script>
+</body>
+</html>

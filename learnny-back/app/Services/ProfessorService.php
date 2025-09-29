@@ -27,16 +27,18 @@ class ProfessorService
         return $this->professorRepository->findById($id);
     }
 
+    public function findMe()
+    {
+        $professorId = auth()->id();
+        return $this->professorRepository->findById($professorId);
+    }
+
     public function createProfessor(array $data)
     {
         return DB::transaction(function () use ($data) {
             try {
                 $subjects = $data['subjects'] ?? [];
                 unset($data['subjects']);
-
-                if (isset($data['password'])) {
-                    $data['password'] = Hash::make($data['password']);
-                }
 
                 $data['status'] = 'pending';
 

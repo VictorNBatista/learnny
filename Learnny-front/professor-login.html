@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learnny | Login</title>
+    <title>Learnny | Login Professor</title>
     <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
     <link rel="stylesheet" href="src/styles/main.css"> 
     <link rel="stylesheet" href="src/styles/partials/forms.css">
@@ -24,11 +24,12 @@
         </header>
 
         <main>
-            <h1>Login</h1>
+            <h1>Login Professor</h1>
+            <p>Acesso restrito para professores</p>
 
-            <form id="loginForm">
+            <form id="professorLoginForm">
                 <div class="input-block">
-                    <label for="email">E-mail</label>
+                    <label for="email">E-mail do professor</label>
                     <input type="email" id="email" name="email" required>
                 </div>
 
@@ -42,16 +43,16 @@
                     </div>
                 </div>
 
-                <button type="submit" class="button">Entrar</button>
+                <button type="submit" class="button">Entrar como professor</button>
 
                 <div id="mensagem" class="error-message"></div>
             </form>
 
-            <p id="msg-register">É novo por aqui? <a href="register.html">Cadastre-se</a></p>
+            <p id="msg-register">Não é um professor? <a href="give-classes.html">Cadastro de professor</a></p>
         </main>
     </div>
 
-    <script src="public/scripts/login.js"></script>
+    <script src="public/scripts/professor-login.js"></script>
     <script src="public/scripts/togglePassword.js"></script>
 </body>
 </html>

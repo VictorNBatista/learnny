@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Services\AdminService;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\TokenRepository;
 use App\Models\Admin;
 
 class AdminAuthController extends Controller
 {
-    protected $adminService;
+    protected $tokenRepository;
 
-    public function __construct(AdminService $adminService)
+    public function __construct(TokenRepository $tokenRepository)
     {
-        $this->adminService = $adminService;
+        $this->tokenRepository = $tokenRepository;
     }
 
     public function login(Request $request)
@@ -24,32 +22,30 @@ class AdminAuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        
-        //Receber a credencial (email e senha)
-        $admin = Admin::where('email', $request->email)->first();
 
-        //Verificoaas credenciais estão no Banco
+        $admin = Admin::where('email', strtolower($request->email))->first();
+
         if (!$admin || !Hash::check($request->password, $admin->password)) {
             return response()->json([
-                'status'  => 401,
-                'message' => 'Credenciais inválidas!'
+                'status' => 401,
+                'mensagem' => 'Credenciais inválidas!'
             ]);
         }
 
-        $token = $admin->createToken('ProfessorToken')->accessToken;
+        $admin->token = $admin->createToken($admin->email)->accessToken;
 
         return response()->json([
-            'status'    => 200,
-            'message'   => 'Login realizado com sucesso!',
-            'token'     => $token,
+            'status' => 200,
+            'mensagem' => 'Login realizado com sucesso!',
             'admin' => $admin
         ]);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        $tokenId = $request->user()->token()->id;
+        $this->tokenRepository->revokeAccessToken($tokenId);
 
-        return response()->json(['message' => 'Logout realizado com sucesso!']);
+        return response()->json(['status' => true, 'mensagem' => 'Logout realizado com sucesso!']);
     }
 }
