@@ -58,6 +58,8 @@ Route::middleware('auth:professor')->prefix('/professor')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'listByProfessor']); // Listar meus agendamentos
     Route::put('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirm']); // Confirmar agendamento
     Route::put('/appointments/{appointment}/reject', [AppointmentController::class, 'reject']); // Rejeitar agendamento
+    Route::put('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelByProfessor']); // Cancelar agendamento
+    Route::put('/appointments/{appointment}/complete', [AppointmentController::class, 'complete']); // Marcar agendamento como concluído
 });
 
 // =======================
