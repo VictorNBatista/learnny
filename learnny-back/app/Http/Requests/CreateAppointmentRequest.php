@@ -17,8 +17,7 @@ class CreateAppointmentRequest extends FormRequest
         return [
             'professor_id' => 'required|integer|exists:professors,id',
             'subject_id' => 'required|integer|exists:subjects,id',
-            // O formato ISO 8601 (Y-m-d\TH:i:s) é o que nosso front-end vai receber do serviço
-            'start_time' => 'required|date_format:Y-m-d\TH:i:s|after:now',
+            'start_time' => 'required|date|after:now',
             'location_details' => 'nullable|string|max:255',
         ];
     }

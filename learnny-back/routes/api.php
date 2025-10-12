@@ -34,6 +34,10 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/atualizar/{id}', [UserController::class, 'update']);
         Route::delete('/deletar/{id}', [UserController::class, 'destroy']);
         Route::get('/visualizar/{id}', [UserController::class, 'show']);
+
+        Route::prefix('professors')->group(function () {
+            Route::get('/{professor}', [ProfessorController::class, 'show']); // Ver detalhes de um professor
+        });
     });
 
     Route::prefix('appointments')->group(function () {
