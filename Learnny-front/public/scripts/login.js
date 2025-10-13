@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
           // Login bem-sucedido
           mensagem.textContent = `Bem-vindo, ${data.usuario.name}! Login realizado com sucesso.`
 
-          window.location.href = 'study.html'
+          window.location.href = 'student-dashboard.html'
         } else {
           // Erro no login
           mensagem.textContent = 'Erro no login: ' + data.message

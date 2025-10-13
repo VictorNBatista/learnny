@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 mensagem.textContent = `Bem-vindo, ${data.professor.name}! Login realizado com sucesso.`;
 
                 // Redireciona para dashboard do professor
-                window.location.href = 'index.html';
+                window.location.href = 'professor-dashboard.html';
             } else {
                 mensagem.textContent = 'Erro no login: ' + data.message;
             }
