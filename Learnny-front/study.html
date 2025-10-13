@@ -17,7 +17,7 @@
     <div id="container">
         <header class="page-header">
             <div class="top-bar-container">
-                <a href="index.html" id="btn-logout">
+                <a href="student-dashboard.html" id="btn-logout">
                     <img src="public/images/icons/back.svg" alt="Voltar">
                 </a>
                 <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
@@ -35,22 +35,6 @@
             <!-- Os cards dos professores serão adicionados dinamicamente aqui pelo JavaScript -->
         </main>
     </div>
-
-    <script>
-        // Ao clicar na seta, realiza o logout e redireciona para a página inicial
-        const token = localStorage.getItem('token');
-        document.getElementById('btn-logout').addEventListener('click', function() {
-            const response = fetch('http://localhost:8000/api/logout', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            // Redireciona para a página inicial
-            window.location.href = 'index.html';
-        });
-    </script>
 
     <script src="public/scripts/study.js"></script>
 </body>
