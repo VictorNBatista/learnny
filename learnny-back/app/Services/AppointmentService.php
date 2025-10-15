@@ -69,22 +69,24 @@ class AppointmentService
      * Obtém a lista de agendamentos para um aluno.
      *
      * @param User $student
+     * @param string|null $status
      * @return Collection
      */
-    public function getAppointmentsForUser(User $student): Collection
+    public function getAppointmentsForUser(User $student, ?string $status = null): Collection
     {
-        return $this->appointmentRepository->getByUserId($student->id);
+        return $this->appointmentRepository->getByUserId($student->id, $status);
     }
 
     /**
      * Obtém a lista de agendamentos para um professor.
      *
      * @param Professor $professor
+     * @param string|null $status
      * @return Collection
      */
-    public function getAppointmentsForProfessor(Professor $professor): Collection
+    public function getAppointmentsForProfessor(Professor $professor, ?string $status = null): Collection
     {
-        return $this->appointmentRepository->getByProfessorId($professor->id);
+        return $this->appointmentRepository->getByProfessorId($professor->id, $status);
     }
 
     /**

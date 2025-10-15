@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CreateAppointmentRequest;
 use App\Services\AppointmentService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\Rule;
 use App\Models\Appointment;
 
 class AppointmentController extends Controller
@@ -41,7 +42,12 @@ class AppointmentController extends Controller
      */
     public function listByUser(Request $request): JsonResponse
     {
-        $appointments = $this->appointmentService->getAppointmentsForUser($request->user());
+        $validated = $request->validate([
+            'status' => ['nullable', 'string', Rule::in(['pending', 'confirmed', 'completed', 'cancelled'])]
+        ]);
+        
+        $status = $validated['status'] ?? null;
+        $appointments = $this->appointmentService->getAppointmentsForUser($request->user(), $status);
 
         return response()->json($appointments);
     }
@@ -68,7 +74,12 @@ class AppointmentController extends Controller
      */
     public function listByProfessor(Request $request): JsonResponse
     {
-        $appointments = $this->appointmentService->getAppointmentsForProfessor($request->user());
+        $validated = $request->validate([
+            'status' => ['nullable', 'string', Rule::in(['pending', 'confirmed', 'completed', 'cancelled'])]
+        ]);
+        
+        $status = $validated['status'] ?? null;
+        $appointments = $this->appointmentService->getAppointmentsForProfessor($request->user(), $status);
 
         return response()->json($appointments);
     }

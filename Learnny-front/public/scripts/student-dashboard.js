@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Funções de inicialização
     checkStudentAuth();
     setupLogout();
-    // setupCardHover(); // Mantive sua chamada original
 });
 
 function checkStudentAuth() {
@@ -16,12 +15,10 @@ function checkStudentAuth() {
 }
 
 function verifyStudentToken(token) {
+    // Usamos uma rota que retorna o usuário logado para verificar o token e pegar os dados
     fetch('http://localhost:8000/api/user/listar', {
         method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(response => {
         if (!response.ok) {
@@ -32,54 +29,53 @@ function verifyStudentToken(token) {
         return response.json();
     })
     .then(user => {
-        // Token é válido, personaliza a página e carrega os agendamentos
         if (user && user.name) {
             const welcomeMessage = document.getElementById('welcome-message');
             if (welcomeMessage) {
                  welcomeMessage.textContent = `Bem-vindo(a) de volta, ${user.name}!`;
             }
         }
-        // >>> NOVA FUNÇÃO CHAMADA AQUI <<<
-        loadAppointments(token);
+        
+        loadAppointments(token, 'all'); // Carrega todos os agendamentos por padrão
+        setupFilters(); // Configura os botões de filtro
     })
     .catch(error => {
-        console.error('Erro de autenticação:', error);
+        console.error('Erro de autenticação:', error.message);
+        localStorage.removeItem('userToken');
+        window.location.href = 'login.html';
     });
 }
 
-function setupLogout() {
-    const logoutBtn = document.getElementById('logout-button');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            logout();
-        });
-    }
+function setupFilters() {
+    const filterContainer = document.querySelector('.filter-buttons');
+    if (!filterContainer) return;
+
+    filterContainer.addEventListener('click', (event) => {
+        const targetButton = event.target.closest('.filter-btn');
+        if (targetButton) {
+            filterContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            targetButton.classList.add('active');
+
+            const filter = targetButton.dataset.filter;
+            const token = localStorage.getItem('userToken');
+            loadAppointments(token, filter);
+        }
+    });
 }
 
-function logout() {
-    const userToken = localStorage.getItem('userToken');
-    if (userToken) {
-        fetch('http://localhost:8000/api/logout', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${userToken}` }
-        })
-        .finally(() => {
-            localStorage.removeItem('userToken');
-            localStorage.removeItem('userId');
-            window.location.href = 'index.html';
-        });
-    } else {
-        window.location.href = 'index.html';
-    }
-}
-
-async function loadAppointments(token) {
+async function loadAppointments(token, filter = 'all') {
     const listContainer = document.getElementById('appointments-list');
     listContainer.innerHTML = '<p>Carregando seus agendamentos...</p>';
     
+    let apiUrl = 'http://localhost:8000/api/appointments/my';
+
+    // Adiciona o parâmetro de filtro à URL, se não for 'all'
+    if (filter !== 'all') {
+        apiUrl += `?status=${filter}`;
+    }
+    
     try {
-        const response = await fetch('http://localhost:8000/api/appointments/my', {
+        const response = await fetch(apiUrl, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -89,7 +85,7 @@ async function loadAppointments(token) {
         listContainer.innerHTML = ''; 
 
         if (appointments.length === 0) {
-            listContainer.innerHTML = '<p>Nenhum agendamento encontrado.</p>';
+            listContainer.innerHTML = '<p>Nenhum agendamento encontrado para este filtro.</p>';
             return;
         }
 
@@ -163,5 +159,32 @@ async function handleCancelClick(event) {
     } catch (error) {
         console.error("Erro ao cancelar:", error);
         alert('Ocorreu um erro de conexão ao tentar cancelar.');
+    }
+}
+
+function setupLogout() {
+    const logoutBtn = document.getElementById('logout-button');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
+}
+
+function logout() {
+    const userToken = localStorage.getItem('userToken');
+    if (userToken) {
+        fetch('http://localhost:8000/api/logout', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${userToken}` }
+        })
+        .finally(() => {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('userId');
+            window.location.href = 'index.html';
+        });
+    } else {
+        window.location.href = 'index.html';
     }
 }

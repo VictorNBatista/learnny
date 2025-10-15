@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     checkProfessorAuth();
     setupLogout();
-    // setupCardHover();
 });
 
 function checkProfessorAuth() {
@@ -37,60 +36,66 @@ function verifyProfessorToken(token) {
             }
         }
         // >>> NOVA FUNÇÃO CHAMADA AQUI <<<
-        loadAppointments(token);
+        loadAppointments(token, 'all');
+        setupFilters();
     })
     .catch(error => {
         console.error('Erro de autenticação:', error);
+        localStorage.removeItem('professorToken');
+        localStorage.removeItem('professorId');
+        window.location.href = 'professor-login.html';
     });
 }
 
-function setupLogout() {
-    const logoutBtn = document.getElementById('logout-button');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            logout();
-        });
-    }
+function setupFilters() {
+    const filterContainer = document.querySelector('.filter-buttons');
+    if (!filterContainer) return;
+
+    filterContainer.addEventListener('click', (event) => {
+        const targetButton = event.target.closest('.filter-btn');
+        if (targetButton) {
+            filterContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            targetButton.classList.add('active');
+            
+            const filter = targetButton.dataset.filter;
+            const token = localStorage.getItem('professorToken');
+            loadAppointments(token, filter);
+        }
+    });
 }
 
-function logout() {
-    const professorToken = localStorage.getItem('professorToken');
-    if (professorToken) {
-        fetch('http://localhost:8000/api/professor/logout', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${professorToken}` }
-        })
-        .finally(() => {
-            localStorage.removeItem('professorToken');
-            localStorage.removeItem('professorId');
-            window.location.href = 'index.html';
-        });
-    } else {
-        window.location.href = 'index.html';
-    }
-}
-
-async function loadAppointments(token) {
+async function loadAppointments(token, filter = 'all') {
     const listContainer = document.getElementById('appointments-list');
     listContainer.innerHTML = '<p>Carregando agendamentos...</p>';
 
+    let apiUrl = 'http://localhost:8000/api/professor/appointments';
+
+    if (filter !== 'all') {
+        apiUrl += `?status=${filter}`;
+    }
+    
     try {
-        const response = await fetch('http://localhost:8000/api/professor/appointments', {
+        const response = await fetch(apiUrl, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
+
         if (!response.ok) throw new Error('Falha ao buscar agendamentos.');
 
         const appointments = await response.json();
-        listContainer.innerHTML = '';
+        listContainer.innerHTML = ''; 
+
         if (appointments.length === 0) {
-            listContainer.innerHTML = '<p>Nenhum agendamento encontrado.</p>';
+            listContainer.innerHTML = '<p>Nenhum agendamento encontrado para este filtro.</p>';
             return;
         }
-        appointments.forEach(app => listContainer.appendChild(createAppointmentCard(app)));
+
+        appointments.forEach(app => {
+            const card = createAppointmentCard(app);
+            listContainer.appendChild(card);
+        });
     } catch (error) {
         console.error(error);
-        listContainer.innerHTML = '<p>Ocorreu um erro ao carregar os agendamentos.</p>';
+        listContainer.innerHTML = '<p>Ocorreu um erro ao carregar seus agendamentos.</p>';
     }
 }
 
@@ -160,6 +165,33 @@ async function handleAppointmentAction(appointmentId, action) {
     } catch (error) {
         console.error(`Erro ao tentar a ação '${action}':`, error);
         alert('Ocorreu um erro de conexão.');
+    }
+}
+
+function setupLogout() {
+    const logoutBtn = document.getElementById('logout-button');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
+}
+
+function logout() {
+    const professorToken = localStorage.getItem('professorToken');
+    if (professorToken) {
+        fetch('http://localhost:8000/api/professor/logout', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${professorToken}` }
+        })
+        .finally(() => {
+            localStorage.removeItem('professorToken');
+            localStorage.removeItem('professorId');
+            window.location.href = 'index.html';
+        });
+    } else {
+        window.location.href = 'index.html';
     }
 }
 

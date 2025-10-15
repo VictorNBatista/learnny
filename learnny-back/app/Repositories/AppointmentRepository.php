@@ -20,6 +20,7 @@ class AppointmentRepository
      * Busca agendamentos confirmados de um professor que colidem com um intervalo de tempo.
      *
      * @param int $professorId
+     * @param string|null $status
      * @param Carbon $startDate
      * @param Carbon $endDate
      * @return Collection
@@ -53,14 +54,22 @@ class AppointmentRepository
      * Busca todos os agendamentos de um aluno específico, com seus relacionamentos.
      *
      * @param int $userId
+     * @param string|null $status
      * @return Collection
      */
-    public function getByUserId(int $userId): Collection
+    public function getByUserId(int $userId, ?string $status = null): Collection
     {
         return $this->model
-            ->with(['professor', 'subject']) // Carrega o professor e a matéria
+            ->with(['professor', 'subject'])
             ->where('user_id', $userId)
-            ->orderBy('start_time', 'desc') // Ordena pelos mais recentes primeiro
+            ->when($status, function ($query, $status) { // Aplica o filtro se $status não for nulo
+                if ($status === 'cancelled') {
+                    // O status 'cancelado' é um grupo de vários status
+                    return $query->whereIn('status', ['cancelled_by_user', 'cancelled_by_professor']);
+                }
+                return $query->where('status', $status);
+            })
+            ->orderBy('start_time', 'desc')
             ->get();
     }
 
@@ -70,11 +79,17 @@ class AppointmentRepository
      * @param int $professorId
      * @return Collection
      */
-    public function getByProfessorId(int $professorId): Collection
+    public function getByProfessorId(int $professorId, ?string $status = null): Collection
     {
         return $this->model
-            ->with(['user', 'subject']) // Carrega o aluno e a matéria
+            ->with(['user', 'subject'])
             ->where('professor_id', $professorId)
+            ->when($status, function ($query, $status) {
+                if ($status === 'cancelled') {
+                    return $query->whereIn('status', ['cancelled_by_user', 'cancelled_by_professor']);
+                }
+                return $query->where('status', $status);
+            })
             ->orderBy('start_time', 'desc')
             ->get();
     }
