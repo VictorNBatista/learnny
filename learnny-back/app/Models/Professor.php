@@ -14,6 +14,7 @@ class Professor extends Authenticatable
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'photo_url',

@@ -24,6 +24,7 @@ class UserCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:50',
+            'username' => 'required|string|max:100|alpha_dash|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users',
             'contact'=> 'required|string|max:15|unique:users',
             'password' => [
@@ -36,7 +37,6 @@ class UserCreateRequest extends FormRequest
                     ->numbers()
                     ->symbols(),
             ],
-            'password_confirmation' => 'required|same:password'
         ];
     }
 

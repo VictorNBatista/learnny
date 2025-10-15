@@ -16,6 +16,7 @@ class ProfessorCreateRequest extends FormRequest
     {
         return [
             'name'       => 'required|string|max:255',
+            'username' => 'required|string|max:100|alpha_dash|unique:users,username',
             'email'      => 'required|string|email|max:255|unique:professors,email',
             'password' => [
                 'required',
@@ -27,7 +28,6 @@ class ProfessorCreateRequest extends FormRequest
                     ->numbers()
                     ->symbols(),
             ],
-            'password_confirmation' => 'required|same:password',
             'photo_url'  => 'nullable|url',
             'contact'    => 'required|string|max:20',
             'biography'  => 'required|string',

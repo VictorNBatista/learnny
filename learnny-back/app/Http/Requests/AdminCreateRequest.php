@@ -15,6 +15,7 @@ class AdminCreateRequest extends FormRequest
     {
         return [
             'name'     => 'required|string|max:255',
+            'username' => 'required|string|max:100|alpha_dash|unique:users,username',
             'email'    => 'required|email|unique:admins,email',
             'password' => 'required|string|min:6|confirmed',
         ];
