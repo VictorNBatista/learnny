@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="src/styles/main.css"> 
     <link rel="stylesheet" href="src/styles/partials/header.css"> 
     <link rel="stylesheet" href="src/styles/partials/forms.css"> 
-    <link rel="stylesheet" href="src/styles/partials/page-give-classes.css"> 
+    <link rel="stylesheet" href="src/styles/partials/page-give-classes.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
 
@@ -58,6 +58,13 @@
                                 <img src="public/images/icons/eye.svg" alt="Mostrar senha" class="eye-icon">
                             </span>
                         </div>
+                        <div id="password-rules" class="password-rules">
+                            <p id="rule-length" class="rule">Pelo menos 8 caracteres</p>
+                            <p id="rule-uppercase" class="rule">Uma letra maiúscula</p>
+                            <p id="rule-lowercase" class="rule">Uma letra minúscula</p>
+                            <p id="rule-number" class="rule">Pelo menos um número</p>
+                            <p id="rule-symbol" class="rule">Pelo menos um símbolo (!@#$...)</p>
+                        </div>
                     </div>
                     
                     <div class="input-block">
@@ -91,5 +98,6 @@
 
     <script src="public/scripts/register.js"></script>
     <script src="public/scripts/togglePassword.js"></script>
+    <script src="public/scripts/password-validation.js"></script> </body>
 </body>
 </html>
