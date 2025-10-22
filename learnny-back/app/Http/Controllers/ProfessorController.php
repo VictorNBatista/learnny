@@ -29,13 +29,25 @@ class ProfessorController extends Controller
 
     public function store(ProfessorCreateRequest $request)
     {
-        $professor = $this->professorService->createProfessor($request->validated());
+        try {
+            // Tenta criar o professor (e provisionar no Moodle)
+            $professor = $this->professorService->createProfessor($request->validated());
 
-        return response()->json([
-            'status' => 201,
-            'message' => 'Professor cadastrado com sucesso! Aguarde a aprovação de um administrador.',
-            'data' => $professor
-        ]);
+            // Resposta de Sucesso
+            return response()->json([
+                'status' => 201,
+                'message' => 'Professor cadastrado com sucesso! Aguarde a aprovação de um administrador.',
+                'data' => $professor
+            ], 201); // É uma boa prática passar o código de status aqui também
+
+        } catch (\Exception $e) {
+            
+            // Captura a exceção lançada pelo service (ex: falha no Moodle)
+            return response()->json([
+                'status' => 503, // 503 (Service Unavailable) é bom para falhas em APIs externas
+                'message' => $e->getMessage() // Ex: "Falha ao provisionar professor no Moodle. Transação revertida."
+            ], 503);
+        }
     }
 
     public function show($id)

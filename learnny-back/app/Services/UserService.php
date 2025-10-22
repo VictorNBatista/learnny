@@ -15,9 +15,7 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * ESTA É A VERSÃO FINAL COM LIGAÇÃO DIRETA
-     */
+
     public function createUser(array $data)
     {
         // 1. Guarda a senha original que o Moodle precisa.

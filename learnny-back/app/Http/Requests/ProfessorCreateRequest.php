@@ -16,7 +16,7 @@ class ProfessorCreateRequest extends FormRequest
     {
         return [
             'name'       => 'required|string|max:255',
-            'username' => 'required|string|max:100|alpha_dash|unique:users,username',
+            'username' => 'required|string|max:100|alpha_dash|unique:professors,username',
             'email'      => 'required|string|email|max:255|unique:professors,email',
             'password' => [
                 'required',
@@ -33,7 +33,7 @@ class ProfessorCreateRequest extends FormRequest
             'biography'  => 'required|string',
             'price'      => 'required|numeric|min:0',
             
-            'subjects' => 'required|array',
+            'subjects' => 'nullable|array',
             'subjects.*' => 'exists:subjects,id'
         ];
     }

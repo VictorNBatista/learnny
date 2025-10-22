@@ -3,6 +3,7 @@ async function cadastrarUsuario(event) {
 
     // Obtém os valores dos campos do formulário
     const name = document.getElementById('name').value;
+    const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const contact = document.getElementById('contact').value;
     const password = document.getElementById('password').value;
@@ -26,6 +27,7 @@ async function cadastrarUsuario(event) {
     // Dados do usuário para o cadastro
     const dados = {
         name,
+        username,
         email,
         contact,
         password,

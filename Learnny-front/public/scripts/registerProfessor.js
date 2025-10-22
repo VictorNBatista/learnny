@@ -46,6 +46,7 @@ async function cadastrarProfessor(event) {
   event.preventDefault();
 
   const name = document.getElementById('name').value;
+  const username = document.getElementById('username').value;
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const password_confirmation = document.getElementById('password_confirmation').value;
@@ -60,6 +61,7 @@ async function cadastrarProfessor(event) {
 
   const dados = {
     name,
+    username,
     email,
     password,
     password_confirmation,

@@ -14,14 +14,15 @@ class Professor extends Authenticatable
 
     protected $fillable = [
         'name',
-        'username',
-        'email',
         'password',
-        'photo_url',
-        'contact',
-        'biography',
-        'price',
+        'email',
+        'username',  
+        'moodle_id',
         'status',
+        'contact',   
+        'biography',
+        'price',  
+        'photo_url',
     ];
 
     protected $hidden = [

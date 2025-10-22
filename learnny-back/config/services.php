@@ -38,6 +38,7 @@ return [
     'moodle' => [
         'url' => env('MOODLE_URL'),
         'token' => env('MOODLE_TOKEN'),
+        'professor_role_id' => env('MOODLE_PROFESSOR_ROLE_ID', 3),
     ],
 
 ];
