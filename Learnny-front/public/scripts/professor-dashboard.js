@@ -35,7 +35,6 @@ function verifyProfessorToken(token) {
                 welcomeMessage.textContent = `Bem-vindo(a) de volta, ${professor.name}!`;
             }
         }
-        // >>> NOVA FUNÇÃO CHAMADA AQUI <<<
         loadAppointments(token, 'all');
         setupFilters();
     })
@@ -145,8 +144,27 @@ function createAppointmentCard(app) {
 
 async function handleAppointmentAction(appointmentId, action) {
     const token = localStorage.getItem('professorToken');
-    if (!confirm(`Tem certeza que deseja "${action}" o agendamento #${appointmentId}?`)) return;
+    
+    let title = 'Confirmar Ação';
+    let message = `Tem certeza que deseja ${action} o agendamento #${appointmentId}?`;
 
+    if (action === 'confirm') {
+        title = 'Confirmar Agendamento';
+        message = `Deseja confirmar a aula com o aluno para o agendamento #${appointmentId}?`;
+    } else if (action === 'reject') {
+        title = 'Rejeitar Agendamento';
+        message = `Deseja rejeitar esta solicitação de aula? (ID: ${appointmentId})`;
+    } else if (action === 'cancel') {
+        title = 'Cancelar Agendamento';
+        message = `Deseja cancelar esta aula confirmada? (ID: ${appointmentId})`;
+    }
+
+    const didConfirm = await showConfirm(title, message);
+    
+    // Se o usuário clicou em "Cancelar" no modal, a função para aqui.
+    if (!didConfirm) return;
+
+    // Se o usuário confirmou, o código continua...
     const url = `http://localhost:8000/api/professor/appointments/${appointmentId}/${action}`;
     
     try {
@@ -156,15 +174,27 @@ async function handleAppointmentAction(appointmentId, action) {
         });
 
         if (response.ok) {
-            alert(`Agendamento #${appointmentId} foi atualizado com sucesso!`);
+            showModal(
+                'Sucesso!', 
+                `O agendamento #${appointmentId} foi atualizado com sucesso.`, 
+                'success'
+            );
             loadAppointments(token); // Recarrega a lista
         } else {
             const err = await response.json();
-            alert(`Erro: ${err.message}`);
+            showModal(
+                'Erro', 
+                err.message || 'Não foi possível completar a ação.', 
+                'error'
+            );
         }
     } catch (error) {
         console.error(`Erro ao tentar a ação '${action}':`, error);
-        alert('Ocorreu um erro de conexão.');
+        showModal(
+            'Erro de Conexão', 
+            'Ocorreu um erro ao conectar com o servidor. Tente novamente.', 
+            'error'
+        );
     }
 }
 

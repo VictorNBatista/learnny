@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="src/styles/partials/header.css"> 
     <link rel="stylesheet" href="src/styles/partials/forms.css"> 
     <link rel="stylesheet" href="src/styles/partials/page-give-classes.css">
+    <link rel="stylesheet" href="src/styles/partials/modal.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
 
@@ -87,17 +88,22 @@
                 <button type="submit" form="registerForm">Salvar cadastro</button>
             </footer>
         </main>
+    </div>
 
-        <div id="successModal" class="modal">
-            <div class="modal-content">
-                <span id="closeModal" class="close">&times;</span>
-                <p id="modalMessage"></p>
+    <div id="global-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Título do Modal</h2>
+            <p id="modal-message">Esta é uma mensagem de exemplo.</p>
+            
+            <div class="modal-buttons">
+                <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+                <button id="modal-btn-confirm" class="button">OK</button>
             </div>
         </div>
-    </div> 
-
-    <script src="public/scripts/register.js"></script>
+    
+    <script src="public/scripts/modal.js"></script>
     <script src="public/scripts/togglePassword.js"></script>
     <script src="public/scripts/password-validation.js"></script> </body>
+    <script src="public/scripts/register.js"></script>
 </body>
 </html>
