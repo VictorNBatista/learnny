@@ -62,24 +62,26 @@ class AvailabilityController extends Controller
         return response()->json($slots);
     }
 
-    
-    public function store(Request $request)
+    public function show(Request $request): JsonResponse
     {
-        //
-    }
+        try {
+            $professor = $request->user(); // Pega o professor autenticado via token
 
-    
-    public function show(string $id)
-    {
-        //
-    }
+            if (!$professor) {
+                 return response()->json(['message' => 'Professor não autenticado.'], 401);
+            }
 
-    
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            $availabilities = $this->availabilityService->getAvailabilityForProfessor($professor);
 
+            // Retorna os dados diretamente. O Laravel cuidará da serialização para JSON.
+            return response()->json($availabilities);
+
+        } catch (\Exception $e) {
+            // Log do erro pode ser útil aqui
+             \Log::error('Erro ao buscar disponibilidade: ' . $e->getMessage());
+            return response()->json(['message' => 'Erro ao buscar disponibilidade.'], 500);
+        }
+    }
     
     public function destroy(string $id)
     {

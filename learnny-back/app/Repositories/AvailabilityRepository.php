@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Availability;
 use App\Models\Professor;
+use Illuminate\Database\Eloquent\Collection;
 
 class AvailabilityRepository
 {
@@ -34,5 +35,16 @@ class AvailabilityRepository
     public function create(array $data): Availability
     {
         return $this->model->create($data);
+    }
+
+    /**
+     * Busca todas as disponibilidades de um professor específico.
+     *
+     * @param int $professorId
+     * @return Collection
+     */
+    public function findByProfessorId(int $professorId): Collection
+    {
+        return $this->model->where('professor_id', $professorId)->get();
     }
 }

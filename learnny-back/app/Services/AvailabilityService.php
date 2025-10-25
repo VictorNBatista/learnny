@@ -8,6 +8,7 @@ use App\Repositories\AvailabilityRepository;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 
 class AvailabilityService
 {
@@ -20,6 +21,17 @@ class AvailabilityService
     ) {
         $this->availabilityRepository = $availabilityRepository;
         $this->appointmentRepository = $appointmentRepository;
+    }
+
+    /**
+     * Obtém a lista de regras de disponibilidade para um professor.
+     *
+     * @param Professor $professor
+     * @return Collection
+     */
+    public function getAvailabilityForProfessor(Professor $professor): Collection
+    {
+        return $this->availabilityRepository->findByProfessorId($professor->id);
     }
 
     /**

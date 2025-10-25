@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnny | Editar Disponibilidade</title>
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/partials/header.css">
+    <link rel="stylesheet" href="src/styles/partials/forms.css">
+    <link rel="stylesheet" href="src/styles/partials/page-edit-availability.css"> 
+    <link rel="stylesheet" href="src/styles/partials/modal.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+</head>
+<body id="page-edit-availability">
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="professor-dashboard.html">
+                    <img src="public/images/icons/back.svg" alt="Voltar">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+            <div class="header-content">
+                <strong>Gerenciar Disponibilidade</strong>
+                <p>Marque os dias que você está disponível e defina seus horários.</p>
+            </div>
+        </header>
+
+        <main>
+            <form id="availability-form">
+                <fieldset>
+                    <legend>Seus Horários</legend>
+
+                    <div id="availability-schedule">
+                        <p>Carregando horários...</p> 
+                    </div>
+
+                </fieldset>
+
+                <footer>
+                    <p>
+                        <img src="public/images/icons/warning.svg" alt="Aviso importante">
+                        Importante! <br> Preencha os horários corretamente.
+                    </p>
+                    <button type="submit">Salvar alterações</button>
+                </footer>
+            </form>
+        </main>
+    </div>
+
+    <div id="global-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Título</h2>
+            <p id="modal-message">Mensagem</p>
+            <div class="modal-buttons">
+                <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+                <button id="modal-btn-confirm" class="button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="public/scripts/modal.js"></script> 
+    <script src="public/scripts/edit-availability.js"></script> 
+</body>
+</html>
