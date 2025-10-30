@@ -142,12 +142,14 @@ function renderProfessors(professors, type) {
             : `<button class="btn-view" onclick="viewProfessorDetails(${p.id})">Ver Detalhes</button>`;
         return `
             <div class="professor-item" data-id="${p.id}">
-                <div class="professor-photo"><img src="${photo}" alt="${p.name}" onerror="this.src='public/images/default-avatar.svg'"></div>
-                <div class="professor-info">
-                    <div class="professor-name">${p.name}</div>
-                    <div class="professor-email">${p.email}</div>
-                    <div class="professor-subjects">${subjectsHTML}</div>
-                    <div class="professor-price">R$ ${p.price}/hora</div>
+                <div class = "professor-photo-info">
+                    <div class="professor-photo"><img src="${photo}" alt="${p.name}" onerror="this.src='public/images/default-avatar.svg'"></div>
+                    <div class="professor-info">
+                        <div class="professor-name">${p.name}</div>
+                        <div class="professor-email">${p.email}</div>
+                        <div class="professor-subjects">${subjectsHTML}</div>
+                        <div class="professor-price">R$ ${p.price}/hora</div>
+                    </div>
                 </div>
                 <div class="professor-actions">${actions}</div>
             </div>`;

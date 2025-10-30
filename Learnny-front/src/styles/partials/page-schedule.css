@@ -3,6 +3,13 @@
     height: 100vh;
 }
 
+#page-schedule{
+    background: #020024;
+    background: linear-gradient(140deg, rgba(2,0,36,1) 75%, #9871f5 100%);
+    background-repeat: no-repeat;  /* Impede que o gradiente se repita */
+    background-attachment: fixed;  /* Fixa o background na janela de visualização */
+}
+
 #page-schedule main {
     margin: 3.2rem auto;
     width: 90%;

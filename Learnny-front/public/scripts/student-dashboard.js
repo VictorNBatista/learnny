@@ -138,10 +138,17 @@ function createAppointmentCard(app) {
 
 async function handleCancelClick(event) {
     const appointmentId = event.target.dataset.id;
-    if (!confirm(`Tem certeza que deseja cancelar o agendamento #${appointmentId}?`)) return;
+
+    let title = 'Confirmar Ação';
+    let message = `Tem certeza que deseja cancelar o agendamento #${appointmentId}?`;
 
     const token = localStorage.getItem('userToken');
     const cancelUrl = `http://localhost:8000/api/appointments/${appointmentId}/cancel`;
+
+    const didConfirm = await showConfirm(title, message);
+    
+    
+    if (!didConfirm) return;
 
     try {
         const response = await fetch(cancelUrl, {
@@ -150,7 +157,11 @@ async function handleCancelClick(event) {
         });
 
         if (response.ok) {
-            alert('Agendamento cancelado com sucesso!');
+            showModal(
+                'Sucesso!', 
+                `O agendamento #${appointmentId} foi cancelado com sucesso.`, 
+                'success'
+            );
             loadAppointments(token); // Recarrega a lista
         } else {
             const errorData = await response.json();

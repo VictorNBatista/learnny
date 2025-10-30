@@ -105,6 +105,7 @@
 .professor-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 2.4rem;
     padding: 2.4rem;
     border-bottom: 1px solid var(--color-line-in-white);
@@ -117,6 +118,12 @@
 
 .professor-item:hover {
     background: var(--color-box-footer);
+}
+
+.professor-photo-info {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
 }
 
 .professor-photo {
@@ -135,7 +142,9 @@
 }
 
 .professor-info {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
 }
 
 .professor-name {
@@ -164,6 +173,10 @@
     border-radius: 1.2rem;
     font-size: 1.2rem;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
 }
 
 .professor-price {
@@ -367,14 +380,23 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.8rem;
-    margin-top: 0.8rem;
 }
 
-.modal-content p {
-    padding: 2.4rem 3.2rem 1.6rem;
+.modal-content .infos, #subjects {
+    padding: 2.4rem 1.6rem;
+    border-radius: 8px;
     color: var(--color-text-base);
     font-size: 1.6rem;
     line-height: 2.4rem;
+    background: var(--color-input-background);
+    width: 100%;
+}
+
+#subjects {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.6rem;
 }
 
 .modal-actions {
