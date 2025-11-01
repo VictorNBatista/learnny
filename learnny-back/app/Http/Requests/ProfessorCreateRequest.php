@@ -33,7 +33,7 @@ class ProfessorCreateRequest extends FormRequest
             'biography'  => 'required|string',
             'price'      => 'required|numeric|min:0',
             
-            'subjects' => 'nullable|array',
+            'subjects' => 'required|array|min:1', 
             'subjects.*' => 'exists:subjects,id'
         ];
     }

@@ -74,7 +74,11 @@ class ProfessorService
                 // Passa o objeto $professor recém-criado e a senha em texto plano
                 Log::info('Iniciando provisionamento do Moodle para o professor: ' . $professor->email);
                 
-                $moodleSuccess = $this->moodleService->provisionTeacher($professor, $plainTextPassword);
+                $moodleSuccess = $this->moodleService->provisionTeacher(
+                    $professor, 
+                    $plainTextPassword, 
+                    $subjects // Passa os IDs das matérias
+                );
 
                 // 8. VERIFICA A FALHA
                 if (!$moodleSuccess) {

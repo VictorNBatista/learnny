@@ -38,7 +38,8 @@ return [
     'moodle' => [
         'url' => env('MOODLE_URL'),
         'token' => env('MOODLE_TOKEN'),
-        'professor_role_id' => env('MOODLE_PROFESSOR_ROLE_ID', 3),
+        'teacher_role_id' => env('MOODLE_TEACHER_ROLE_ID', 3), 
+        'default_category_id' => env('MOODLE_DEFAULT_CATEGORY_ID', 1),
     ],
 
 ];
