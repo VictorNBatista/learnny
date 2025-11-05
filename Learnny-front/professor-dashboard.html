@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learnny | Meu Painel</title>
+  <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+  <link rel="stylesheet" href="src/styles/main.css">
+  <link rel="stylesheet" href="src/styles/partials/header.css">  
+  <link rel="stylesheet" href="src/styles/partials/page-dashboard.css"> </head>
+  <link rel="stylesheet" href="src/styles/partials/modal.css">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+<body id="page-dashboard">
+    <div id="container">
+      <header class="page-header">
+            <div class="top-bar-container">
+                <a href="#" id="logout-button"> 
+                    <img src="public/images/icons/back.svg" alt="Sair">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+            <div class="header-content">
+                <strong id="welcome-message">Bem-vindo(a) de volta!</strong>
+                <p>Gerencie suas aulas, perfil e disponibilidade.</p>
+            </div>
+        </header>
+        <main>
+            <div class="dashboard-cards">
+                <a href="edit-availability.html" class="dashboard-card">
+                    <div class="card-icon"><img src="public/images/icons/clock.svg" alt="Relógio"></div>
+                    <div class="card-content">
+                        <h3>Gerenciar Disponibilidade</h3>
+                        <p>Atualize seus dias e horários de trabalho.</p>
+                    </div>
+                    <div class="card-arrow"><img src="public/images/icons/arrow-right.svg" alt=""></div>
+                </a>
+
+                <a href="edit-professor-profile.html" class="dashboard-card">
+                    <div class="card-icon"><img src="public/images/icons/profile.svg" alt="Perfil"></div>
+                    <div class="card-content">
+                        <h3>Editar Perfil e Matérias</h3>
+                        <p>Atualize suas informações públicas e preço.</p>
+                    </div>
+                    <div class="card-arrow"><img src="public/images/icons/arrow-right.svg" alt=""></div>
+                </a>
+            </div>
+
+            <div id="appointments-section" class="appointments-container">
+                <h2>Solicitações e Aulas Agendadas</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="pending">Pendentes</button>
+                    <button class="filter-btn" data-filter="confirmed">Confirmados</button>
+                    <button class="filter-btn" data-filter="cancelled">Cancelados/Rejeitados</button>
+                </div>
+
+                <div id="appointments-list">
+                    <p>Carregando seus agendamentos...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="global-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Título do Modal</h2>
+            <p id="modal-message">Esta é uma mensagem de exemplo.</p>
+            
+            <div class="modal-buttons">
+                <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+                <button id="modal-btn-confirm" class="button">OK</button>
+            </div>
+        </div>
+    </div>
+    <script src="public/scripts/modal.js"></script>
+    <script src="public/scripts/professor-dashboard.js"></script>
+</body>
+</html>

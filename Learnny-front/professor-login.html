@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="src/styles/main.css"> 
     <link rel="stylesheet" href="src/styles/partials/forms.css">
     <link rel="stylesheet" href="src/styles/partials/login.css">
+    <link rel="stylesheet" href="src/styles/partials/modal.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
 </head>
@@ -52,6 +53,20 @@
         </main>
     </div>
 
+
+    <div id="global-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Título do Modal</h2>
+            <p id="modal-message">Esta é uma mensagem de exemplo.</p>
+            
+            <div class="modal-buttons">
+                <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+                <button id="modal-btn-confirm" class="button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="public/scripts/modal.js"></script>
     <script src="public/scripts/professor-login.js"></script>
     <script src="public/scripts/togglePassword.js"></script>
 </body>

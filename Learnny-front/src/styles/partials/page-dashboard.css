@@ -1,0 +1,255 @@
+#page-dashboard {
+    background: #020024;
+    background: linear-gradient(140deg, rgba(2,0,36,1) 75%, #9871f5 100%);
+    background-repeat: no-repeat;  /* Impede que o gradiente se repita */
+    background-attachment: fixed;  /* Fixa o background na janela de visualização */
+}
+
+#page-dashboard #container {
+    width: 100vw;
+    height: 100vh;
+}
+
+#page-dashboard main {
+    margin: 3.2rem auto;
+    width: 90%;
+    max-width: 980px;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
+    margin-top: -4rem; 
+}
+
+.dashboard-card {
+    background: var(--color-box-base);
+    border-radius: 0.8rem;
+    border: 1px solid var(--color-line-in-white);
+    padding: 2.4rem;
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.dashboard-card:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    background: var(--color-primary-darker);
+    border: 1px solid var(--color-line-in-white);
+    border-radius: 50%;
+    width: 6.4rem;
+    height: 6.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-icon img {
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    font: 700 2.0rem Archivo;
+    color: var(--color-text-title);
+    margin-bottom: 0.8rem;
+}
+
+.card-content p {
+    font-size: 1.4rem;
+    color: var(--color-text-complement);
+    line-height: 2.0rem;
+}
+
+.card-arrow {
+    flex-shrink: 0;
+}
+
+.card-arrow img {
+    width: 2.4rem;
+    height: 2.4rem;
+    opacity: 0.4;
+    transition: transform 0.2s;
+}
+
+.dashboard-card:hover .card-arrow img {
+    transform: translateX(4px);
+}
+
+.dashboard-card.primary-action {
+    background: var(--color-primary);
+    border-color: var(--color-primary-dark);
+}
+.dashboard-card.primary-action .card-icon {
+    background: var(--color-primary-light);
+}
+.dashboard-card.primary-action h3,
+.dashboard-card.primary-action p {
+    color: var(--color-title-in-primary);
+}
+
+
+.appointments-container {
+    margin-top: 6.4rem; /* Mais espaço entre os cards de navegação e a lista */
+}
+
+.appointments-container h2 {
+    font: 700 2.4rem Archivo;
+    color: var(--color-primary-light);
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid var(--color-line-in-white);
+    margin-bottom: 2.4rem;
+}
+
+.appointment-card {
+    background-color: var(--color-box-base);
+    border: 1px solid var(--color-line-in-white);
+    border-radius: .8rem;
+    margin-top: 2.4rem;
+    overflow: hidden;
+}
+
+.appointment-card header {
+    padding: 2.4rem 2.0rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-line-in-white);
+    flex-wrap: wrap; /* Permite que o badge quebre a linha em telas pequenas */
+    gap: 1.6rem;
+}
+
+.appointment-card .profile {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.appointment-card .profile img {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+}
+
+.appointment-card .profile div strong {
+    font: 700 2.0rem Archivo;
+    display: block;
+    color: var(--color-text-title);
+}
+
+.appointment-card .profile div span {
+    font-size: 1.4rem;
+    display: block;
+    color: var(--color-text-complement);
+    margin-top: .4rem;
+}
+
+.appointment-card .details {
+    padding: 2.4rem;
+    font-size: 1.6rem;
+    line-height: 2.8rem;
+    color: var(--color-text-base);
+}
+
+.appointment-card footer,
+.action-footer {
+    padding: 2.4rem 2.0rem;
+    background-color: var(--color-box-footer);
+    border-top: 1px solid var(--color-line-in-white);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.6rem;
+}
+
+.action-footer {
+    justify-content: flex-end; /* Alinha botões do professor à direita */
+}
+
+/* --- Botões de Ação (Confirmar, Rejeitar, Cancelar) --- */
+.confirm-button, .reject-button, .cancel-button {
+    border: 0;
+    border-radius: .8rem;
+    cursor: pointer;
+    font: 700 1.4rem Archivo;
+    padding: 1.2rem 2.4rem;
+    transition: background 0.2s;
+    color: var(--color-button-text);
+}
+
+.confirm-button { background-color: var(--color-secondary); }
+.confirm-button:hover { background-color: var(--color-secondary-dark); }
+
+.reject-button, .cancel-button { background-color: #EB5757; }
+.reject-button:hover, .cancel-button:hover { background-color: #c74646; }
+
+/* --- Badges de Status --- */
+.status-badge {
+    padding: 0.4rem 1.2rem;
+    border-radius: 1.2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.status-pending { background-color: #F2994A; } /* Laranja */
+.status-confirmed { background-color: var(--color-secondary); } /* Verde */
+.status-completed { background-color: var(--color-primary-light); } /* Roxo claro */
+.status-rejected,
+.status-cancelled_by_user,
+.status-cancelled_by_professor { background-color: #EB5757; } /* Vermelho */
+
+.filter-buttons {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 2.4rem;
+    flex-wrap: wrap; /* Para telas pequenas */
+}
+
+.filter-btn {
+    background: var(--color-box-footer);
+    border: 1px solid var(--color-line-in-white);
+    color: var(--color-text-complement);
+    padding: 0.8rem 1.6rem;
+    border-radius: 0.8rem;
+    font: 600 1.4rem Archivo;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: var(--color-line-in-white);
+    color: var(--color-text-title);
+}
+
+.filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-button-text);
+    border-color: var(--color-primary);
+}
+
+@media (min-width: 700px) {
+    #page-dashboard #container {
+        max-width: 100vw;
+    }
+
+    /* Agora a responsividade dos cards de navegação funcionará corretamente */
+    .dashboard-cards {
+        grid-template-columns: repeat(auto-fit, minmax(35rem, 1fr));
+    }
+}

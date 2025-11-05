@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnny | Editar Perfil do Professor</title>
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/partials/header.css">
+    <link rel="stylesheet" href="src/styles/partials/forms.css">
+    <link rel="stylesheet" href="src/styles/partials/page-edit-profile.css">
+    <link rel="stylesheet" href="src/styles/partials/modal.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body id="page-edit-profile">
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="professor-dashboard.html" aria-label="Voltar para o painel">
+                    <img src="public/images/icons/back.svg" alt="Voltar">
+                </a>
+                <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+            </div>
+            <div class="header-content">
+                <strong>Atualize seu perfil público</strong>
+                <p>Mantenha seus alunos informados sobre quem você é e quais matérias oferece.</p>
+            </div>
+        </header>
+
+        <div id="feedback-message" class="form-feedback" role="alert"></div>
+
+        <main>
+            <form id="professor-profile-form" autocomplete="off">
+                <fieldset>
+                    <legend>Seus dados</legend>
+
+                    <div class="input-block">
+                        <label for="name">Nome completo</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" disabled>
+                        <p class="readonly-note">O e-mail não pode ser alterado nesta tela.</p>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="contact">WhatsApp</label>
+                        <input type="tel" id="contact" name="contact" maxlength="15">
+                    </div>
+
+                    <div class="input-block">
+                        <label for="photo_url">Link da sua foto <small>(comece com https://)</small></label>
+                        <input type="url" id="photo_url" name="photo_url">
+                    </div>
+
+                    <div class="textarea-block">
+                        <label for="biography">Biografia</label>
+                        <textarea id="biography" name="biography" rows="5"></textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Sobre suas aulas</legend>
+
+                    <div class="select-block">
+                        <label for="subjects-checkbox-list">Matérias oferecidas</label>
+                        <div id="subjects-checkbox-list"></div>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="price">Valor da hora/aula <small>(R$)</small></label>
+                        <input type="number" id="price" name="price" step="0.01" min="0" inputmode="decimal">
+                    </div>
+                </fieldset>
+            </form>
+
+            <footer>
+                <button type="submit" form="professor-profile-form">Salvar alterações</button>
+            </footer>
+        </main>
+    </div>
+
+    <div id="global-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Título do Modal</h2>
+            <p id="modal-message">Esta é uma mensagem de exemplo.</p>
+            
+            <div class="modal-buttons">
+                <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+                <button id="modal-btn-confirm" class="button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="public/scripts/modal.js"></script>
+    <script src="public/scripts/password-validation.js"></script>
+    <script src="public/scripts/togglePassword.js" defer></script>
+    <script src="public/scripts/edit-professor-profile.js" defer></script>
+</body>
+</html>

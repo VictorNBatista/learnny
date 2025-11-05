@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('adminLoginForm');
-    const mensagem = document.getElementById('mensagem');
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -22,17 +21,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 localStorage.setItem('adminToken', data.admin.token);
                 localStorage.setItem('adminId', data.admin.id);
 
-                mensagem.textContent = `Bem-vindo, ${data.admin.name}! Login realizado com sucesso.`;
+                showModal(
+                    'Login Bem-Sucedido!', 
+                    `Bem-vindo, ${data.admin.name}! Você será redirecionado.`, 
+                    'success'
+                );
 
-                // Redireciona para o dashboard
-                window.location.href = 'admin.html';
+                // Espera 2 segundos para o usuário ler a mensagem e redireciona
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 2000);
             } else {
-                mensagem.textContent = 'Erro no login: ' + (data.mensagem || 'Erro desconhecido');
+                showModal('Erro no Login', data.message || 'Credenciais inválidas.', 'error');
             }
         })
         .catch(error => {
-            console.error("Erro ao realizar login:", error);
-            mensagem.textContent = 'Erro ao realizar o login. Tente novamente.';
+            console.error('🚀 ~ Erro na comunicação:', error);
+            showModal('Erro de Conexão', 'Não foi possível conectar ao servidor. Tente novamente.', 'error');
         });
     });
 });

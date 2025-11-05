@@ -8,6 +8,9 @@ use App\Http\Controllers\ProfessorAuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminSubjectController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AvailabilityController;
+
 use Illuminate\Support\Facades\Route;
 
 // =======================
@@ -31,6 +34,16 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/atualizar/{id}', [UserController::class, 'update']);
         Route::delete('/deletar/{id}', [UserController::class, 'destroy']);
         Route::get('/visualizar/{id}', [UserController::class, 'show']);
+
+        Route::prefix('professors')->group(function () {
+            Route::get('/{professor}', [ProfessorController::class, 'show']); // Ver detalhes de um professor
+        });
+    });
+
+    Route::prefix('appointments')->group(function () {
+        Route::post('/', [AppointmentController::class, 'store']); // Criar um novo agendamento
+        Route::get('/my', [AppointmentController::class, 'listByUser']); // Listar meus agendamentos
+        Route::put('/{appointment}/cancel', [AppointmentController::class, 'cancelByUser']); // Cancelar um agendamento
     });
 });
 
@@ -42,12 +55,23 @@ Route::middleware('auth:professor')->prefix('/professor')->group(function () {
     Route::get('/me', [ProfessorController::class, 'me']);
     Route::put('/atualizar/{id}', [ProfessorController::class, 'update']);
     Route::delete('/deletar/{id}', [ProfessorController::class, 'destroy']);
+    Route::get('/availabilities', [AvailabilityController::class, 'show']); // Ver minha disponibilidade
+    Route::post('/availabilities', [AvailabilityController::class, 'storeOrUpdate']); // Criar ou atualizar minha disponibilidade
+
+    // Gerenciamento de Agendamentos
+    Route::get('/appointments', [AppointmentController::class, 'listByProfessor']); // Listar meus agendamentos
+    Route::put('/appointments/{appointment}/confirm', [AppointmentController::class, 'confirm']); // Confirmar agendamento
+    Route::put('/appointments/{appointment}/reject', [AppointmentController::class, 'reject']); // Rejeitar agendamento
+    Route::put('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancelByProfessor']); // Cancelar agendamento
+    Route::put('/appointments/{appointment}/complete', [AppointmentController::class, 'complete']); // Marcar agendamento como concluído
 });
 
 // =======================
 // Professor (público)
 // =======================
-Route::get('professor/listar', [ProfessorController::class, 'index']); 
+Route::get('professor/listar', [ProfessorController::class, 'index']);
+Route::get('/professor/{professor}/availabilities', [AvailabilityController::class, 'index']); 
+
 // =======================
 // Subjects (público)
 // =======================

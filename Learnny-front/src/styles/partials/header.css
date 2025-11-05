@@ -27,7 +27,7 @@
 }
 
 .page-header .top-bar-container > img {
-    height: 1.6rem;
+    height: 4rem;
 }
 
 .page-header .header-content {
@@ -45,7 +45,7 @@
 }
 
 .page-header .header-content p {
-    max-width: 30rem;
+    max-width: 100%;
     font-size: 1.6rem;
     line-height: 2.6rem;
     color: var(--color-text-in-primary);

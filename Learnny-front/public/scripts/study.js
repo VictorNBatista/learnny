@@ -48,7 +48,7 @@ function exibirProfessores(professores) {
 
         professorCard.innerHTML = `
             <header>
-                <img src="${professor.photo_url}" alt="${professor.name}">
+                <img src="${professor.photo_url || 'public/images/default-avatar.svg'}" alt="${professor.name}">
                 <div>
                     <strong>${professor.name}</strong>
                     <span>${materias}</span>
@@ -57,8 +57,8 @@ function exibirProfessores(professores) {
             <p>${professor.biography}</p>
             <footer>
                 <p>Preço/hora <strong>R$ ${Number(professor.price).toFixed(2)}</strong></p>
-                <a href="https://api.whatsapp.com/send?1=pt_BR&phone=${professor.contact}&text=Tenho interesse na sua aula de ${materias}" target="_blank" class="button">
-                    <img src="public/images/icons/whatsapp.svg" alt="Whatsapp">Entrar em contato
+                <a href="schedule.html?professorId=${professor.id}" class="button">
+                     <img src="public/images/icons/schedule.svg" alt="Agendar">Agendar Aula
                 </a>
             </footer>
         `;

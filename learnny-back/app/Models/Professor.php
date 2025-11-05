@@ -41,4 +41,14 @@ class Professor extends Authenticatable
     {
         return $this->belongsToMany(Subject::class, 'professor_subject');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function availabilities()
+    {
+        return $this->hasMany(Availability::class);
+    }
 }

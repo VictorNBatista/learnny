@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("professor-login.js carregado");
     const form = document.getElementById('professorLoginForm');
-    const mensagem = document.getElementById('mensagem');
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -23,17 +21,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 localStorage.setItem('professorToken', data.professor.token);
                 localStorage.setItem('professorId', data.professor.id);
 
-                mensagem.textContent = `Bem-vindo, ${data.professor.name}! Login realizado com sucesso.`;
+                showModal(
+                    'Login Bem-Sucedido!', 
+                    `Bem-vindo, Professor(a) ${data.professor.name}! Você será redirecionado.`, 
+                    'success'
+                );
 
-                // Redireciona para dashboard do professor
-                window.location.href = 'index.html';
+                // Espera 2 segundos para o usuário ler a mensagem e redireciona
+                setTimeout(() => {
+                    window.location.href = 'professor-dashboard.html';
+                }, 2000);
+
             } else {
-                mensagem.textContent = 'Erro no login: ' + data.message;
+                showModal('Erro no Login', data.message || 'Credenciais inválidas.', 'error');
             }
         })
         .catch(error => {
-            console.error('Erro ao realizar login:', error);
-            mensagem.textContent = 'Erro ao realizar o login. Tente novamente.';
+            console.error('🚀 ~ Erro na comunicação:', error);
+            showModal('Erro de Conexão', 'Não foi possível conectar ao servidor. Tente novamente.', 'error');
         });
     });
 });

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnny | Agendar Aula</title>
+    <link rel="shortcut icon" href="public/images/favicon.png" type="image/png">
+    
+    <link rel="stylesheet" href="src/styles/main.css"> 
+    <link rel="stylesheet" href="src/styles/partials/header.css">
+    <link rel="stylesheet" href="src/styles/partials/page-schedule.css">
+    <link rel="stylesheet" href="src/styles/partials/modal.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+</head>
+<body id="page-schedule">
+
+  <div id="container">
+    <header class="page-header">
+      <div class="top-bar-container">
+        <a href="study.html">
+            <img src="public/images/icons/back.svg" alt="Voltar">
+        </a>
+        <img src="public/images/Learnny-Logo-white.svg" alt="Learnny">
+      </div>
+      <div class="header-content">
+        <strong>Que incrível que você quer agendar uma aula!</strong>
+        <p>Escolha uma matéria e um dos horários disponíveis abaixo.</p>
+      </div>
+    </header>
+
+      <main>
+          <div id="schedule-container">
+              <div id="professor-info" class="professor-header">
+                  </div>
+
+              <div class="select-block">
+                  <label for="subject">Matéria</label>
+                  <select name="subject" id="subject-select" required>
+                      <option value="" disabled selected>Selecione uma matéria</option>
+                      </select>
+              </div>
+              
+              <div id="availability-container">
+                  <h3>Horários Disponíveis (Próximos 7 dias)</h3>
+                  <div id="slots-container" class="slots">
+                      <p>Carregando horários...</p>
+                  </div>
+              </div>
+          </div>
+      </main>
+  </div>
+
+  <div id="global-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+          <h2 id="modal-title">Título do Modal</h2>
+          <p id="modal-message">Esta é uma mensagem de exemplo.</p>
+          
+          <div class="modal-buttons">
+              <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+              <button id="modal-btn-confirm" class="button">OK</button>
+          </div>
+      </div>
+  </div>
+
+    <script src="public/scripts/modal.js"></script>
+    <script src="public/scripts/schedule.js"></script>
+</body>
+</html>

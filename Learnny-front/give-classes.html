@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="src/styles/main.css"> 
     <link rel="stylesheet" href="src/styles/partials/header.css"> 
     <link rel="stylesheet" href="src/styles/partials/forms.css"> 
-    <link rel="stylesheet" href="src/styles/partials/page-give-classes.css"> 
+    <link rel="stylesheet" href="src/styles/partials/page-give-classes.css">
+    <link rel="stylesheet" href="src/styles/partials/modal.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
     <script src="public/scripts/addField.js" defer></script>
@@ -57,6 +58,13 @@
                         <span class="toggle-password">
                             <img src="public/images/icons/eye.svg" alt="Mostrar senha" class="eye-icon">
                         </span>
+                    </div>
+                    <div id="password-rules" class="password-rules">
+                        <p id="rule-length" class="rule">Pelo menos 8 caracteres</p>
+                        <p id="rule-uppercase" class="rule">Uma letra maiúscula</p>
+                        <p id="rule-lowercase" class="rule">Uma letra minúscula</p>
+                        <p id="rule-number" class="rule">Pelo menos um número</p>
+                        <p id="rule-symbol" class="rule">Pelo menos um símbolo (!@#$...)</p>
                     </div>
                 </div>
                     
@@ -115,7 +123,21 @@
         </main>
     </div> 
     
-    <script src="public/scripts/registerProfessor.js" defer></script>
+    <div id="global-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Título do Modal</h2>
+            <p id="modal-message">Esta é uma mensagem de exemplo.</p>
+            
+            <div class="modal-buttons">
+                <button id="modal-btn-cancel" class="button-secondary">Cancelar</button>
+                <button id="modal-btn-confirm" class="button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="public/scripts/modal.js"></script>
     <script src="public/scripts/togglePassword.js"></script>
+    <script src="public/scripts/password-validation.js"></script>
+    <script src="public/scripts/registerProfessor.js" defer></script>
 </body>
 </html>
