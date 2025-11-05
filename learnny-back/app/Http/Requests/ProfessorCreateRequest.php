@@ -16,6 +16,7 @@ class ProfessorCreateRequest extends FormRequest
     {
         return [
             'name'       => 'required|string|max:255',
+            'username' => 'required|string|max:100|alpha_dash|unique:professors,username',
             'email'      => 'required|string|email|max:255|unique:professors,email',
             'password' => [
                 'required',
@@ -27,13 +28,12 @@ class ProfessorCreateRequest extends FormRequest
                     ->numbers()
                     ->symbols(),
             ],
-            'password_confirmation' => 'required|same:password',
             'photo_url'  => 'nullable|url',
             'contact'    => 'required|string|max:20',
             'biography'  => 'required|string',
             'price'      => 'required|numeric|min:0',
             
-            'subjects' => 'required|array',
+            'subjects' => 'required|array|min:1', 
             'subjects.*' => 'exists:subjects,id'
         ];
     }

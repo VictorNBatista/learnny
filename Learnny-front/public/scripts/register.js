@@ -1,26 +1,24 @@
 async function cadastrarUsuario(event) {
   event.preventDefault()
 
-  // Obtém os valores dos campos do formulário
-  const name = document.getElementById('name').value
-  const email = document.getElementById('email').value
-  const contact = document.getElementById('contact').value
-  const password = document.getElementById('password').value
-  const password_confirmation = document.getElementById(
-    'password_confirmation'
-  ).value
+    // Obtém os valores dos campos do formulário
+    const name = document.getElementById('name').value;
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const contact = document.getElementById('contact').value;
+    const password = document.getElementById('password').value;
+    const password_confirmation = document.getElementById('password_confirmation').value;
 
-  // --- Validação 1 (Regex) ---
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-  if (!passwordRegex.test(password)) {
-    showModal(
-      'Senha Inválida',
-      'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma minúscula, um número e um símbolo.',
-      'error'
-    )
-    return
-  }
+    // Validação da senha
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      showModal(
+        'Senha Inválida',
+        'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma minúscula, um número e um símbolo.',
+        'error'
+      )
+      return
+    }   
 
   // --- Validação 2 (Confirmação) ---
   if (password !== password_confirmation) {
@@ -35,6 +33,7 @@ async function cadastrarUsuario(event) {
   // Dados do usuário para o cadastro
   const dados = {
     name,
+    username,
     email,
     contact,
     password,

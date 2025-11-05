@@ -53,15 +53,15 @@ async function carregarMaterias() {
 async function cadastrarProfessor(event) {
     event.preventDefault(); // Impede o envio padrão do formulário
 
-    // Coleta dos dados do formulário
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const password_confirmation = document.getElementById('password_confirmation').value;
-    const photo_url = document.getElementById('avatar').value;
-    const contact = document.getElementById('whatsapp').value;
-    const biography = document.getElementById('bio').value;
-    const price = parseFloat(document.getElementById('cost').value);
+  const name = document.getElementById('name').value;
+  const username = document.getElementById('username').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const password_confirmation = document.getElementById('password_confirmation').value;
+  const photo_url = document.getElementById('avatar').value;
+  const contact = document.getElementById('whatsapp').value;
+  const biography = document.getElementById('bio').value;
+  const price = parseFloat(document.getElementById('cost').value);
 
     // Coleta das matérias selecionadas
     const subjects = Array.from(
@@ -80,6 +80,7 @@ async function cadastrarProfessor(event) {
     // Monta o objeto de dados para envio
     const dados = {
         name,
+        username,
         email,
         password,
         password_confirmation,
