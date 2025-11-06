@@ -63,7 +63,7 @@ class ProfessorSeeder extends Seeder
                 'name' => 'Lúcia Pereira',
                 'username' => 'luciapereira',
                 'password' => Hash::make('senha123'),
-                'photo_url' => 'https://www.blackhistorymonth.org.uk/wp-content/uploads/2016/01/shutterstock_184330676-623x438.jpg',
+                'photo_url' => 'https://media.istockphoto.com/id/1495037929/photo/happy-elementary-school-teacher-giving-high-five-to-her-student-during-class-in-the-classroom.jpg?s=612x612&w=0&k=20&c=Gn5Kqzd58Tr4sCu-9LKbvQSszJ6b9VmyFB21FOCCO98=',
                 'contact' => '31987654323',
                 'biography' => 'Apaixonada por literatura e gramática. Foco total em redação e preparação para o ENEM.',
                 'price' => 130.00,
