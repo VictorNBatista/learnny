@@ -142,6 +142,7 @@
     width: 8rem;
     height: 8rem;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .appointment-card .profile div strong {
