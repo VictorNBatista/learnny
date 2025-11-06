@@ -27,6 +27,7 @@ class UserCreateRequest extends FormRequest
             'username' => 'required|string|max:100|alpha_dash|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users',
             'contact'=> 'required|string|max:15|unique:users',
+            'photo_url'  => 'nullable|url',
             'password' => [
                 'required',
                 'string',

@@ -6,6 +6,7 @@ async function cadastrarUsuario(event) {
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const contact = document.getElementById('contact').value;
+    const photo_url = document.getElementById('photo_url').value;
     const password = document.getElementById('password').value;
     const password_confirmation = document.getElementById('password_confirmation').value;
 
@@ -37,7 +38,8 @@ async function cadastrarUsuario(event) {
     email,
     contact,
     password,
-    password_confirmation
+    password_confirmation,
+    photo_url
   }
 
   try {

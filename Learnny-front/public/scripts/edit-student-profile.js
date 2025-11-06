@@ -133,6 +133,7 @@ function normalizeStudentProfile(profile) {
         name: profile.name || '',
         email: (profile.email || '').toLowerCase(), // Normaliza o caso do email
         contact: profile.contact || '',
+        photo_url: profile.photo_url || '',
         // Não armazena informações de senha buscadas da API
     };
 }
@@ -141,6 +142,7 @@ function populateStudentForm(initialData) {
     document.getElementById('name').value = initialData.name;
     document.getElementById('email').value = initialData.email;
     document.getElementById('contact').value = initialData.contact;
+    document.getElementById('photo_url').value = initialData.photo_url;
     // Limpa campos de senha ao carregar
     clearStudentPasswordFields();
 }
@@ -152,6 +154,7 @@ function buildStudentPayload(initialData) {
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim().toLowerCase();
     const contact = document.getElementById('contact').value.trim();
+    const photo_url = document.getElementById('photo_url').value.trim();
     const password = document.getElementById('password').value;
     const passwordConfirmation = document.getElementById('password_confirmation').value;
 
@@ -164,6 +167,9 @@ function buildStudentPayload(initialData) {
     }
     if (contact && contact !== initialData.contact) {
         payload.contact = contact;
+    }
+    if (photo_url !== initialData.photo_url) {
+        payload.photo_url = photo_url === '' ? null : photo_url; 
     }
 
     // Lida com a lógica de atualização de senha

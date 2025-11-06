@@ -26,6 +26,7 @@ class UserUpdateRequest extends FormRequest
             'name' => 'sometimes|string|max:50',
             'email' => 'sometimes|string|email|max:255|unique:users',
             'contact'=> 'sometimes|string|max:15|unique:users',
+            'photo_url' => 'sometimes|string|url',
             'password' => [
                 'sometimes',
                 'string',
