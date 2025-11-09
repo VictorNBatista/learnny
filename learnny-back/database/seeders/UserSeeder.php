@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             'email'    => 'victor@email.com',
             'password' => Hash::make('Victor@123'),
             'contact'  => '62999764714',
-            'photo_url' => 'https://imgur.com/uNVSBbx'
+            'photo_url' => 'https://imgur.com/uNVSBbx.png'
         ]);
     }
 }
