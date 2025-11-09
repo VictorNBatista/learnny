@@ -3,14 +3,6 @@
     height: 100vh;
 }
 
-#page-give-classes .page-header .header-content {
-    margin-bottom: 6.4rem;
-}
-
-.page-header .top-bar-container img {
-    height: 4rem;
-}
-
 #page-give-classes{
     background-color: #020024;
     background: #020024;
@@ -221,13 +213,13 @@
     content: '●';
     font-size: 1.2rem;
     margin-right: 0.8rem;
-    color: var(--color-line-in-white); /* Cor cinza bem clara */
+    color: var(--color-line-in-white);
     transition: color 0.3s;
 }
 
 /* Estilo para quando a regra for VÁLIDA */
 .rule.valid {
-    color: var(--color-secondary); /* Cor verde do seu tema */
+    color: var(--color-secondary);
 }
 
 /* Muda o ícone para um checkmark verde quando for válida */
@@ -240,10 +232,6 @@
 @media (min-width: 700px) {
     #page-give-classes #container {
         max-width: 100vw;
-    }
-
-    #page-give-classes .page-header .header-content {
-        margin-bottom: 0;
     }
 
     #page-give-classes main fieldset {

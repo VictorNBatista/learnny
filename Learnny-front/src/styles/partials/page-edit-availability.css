@@ -10,10 +10,6 @@
   background-attachment: fixed;
 }
 
-#page-edit-availability .page-header .header-content {
-    margin-bottom: 6.4rem;
-}
-
 #page-edit-availability main {
     background: var(--color-box-base);
     width: 100%;
