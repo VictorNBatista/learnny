@@ -31,17 +31,20 @@
 }
 
 .page-header .header-content {
-    width: 100%;
+    max-width: 100%;
     margin: 3.2rem auto;
-
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .page-header .header-content strong {
+    width: 100%;
     font: 700 3.6rem Archivo;
     line-height: 4.2rem;
     color: var(--color-title-in-primary);
-    white-space: nowrap;
 }
 
 .page-header .header-content p {
@@ -72,10 +75,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-    }
-
-    .page-header .header-content strong {
-        max-width: 350px;
+        align-items: flex-start;
     }
 
 }
