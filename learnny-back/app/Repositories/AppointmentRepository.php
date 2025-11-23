@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Repositório de Agendamentos
+ * 
+ * Encapsula o acesso aos dados de agendamentos no banco de dados,
+ * providenciando métodos para operações CRUD e consultas complexas.
+ */
 class AppointmentRepository
 {
     protected $model;
@@ -17,21 +23,22 @@ class AppointmentRepository
     }
 
     /**
-     * Busca agendamentos confirmados de um professor que colidem com um intervalo de tempo.
-     *
-     * @param int $professorId
-     * @param string|null $status
-     * @param Carbon $startDate
-     * @param Carbon $endDate
-     * @return Collection
+     * Busca agendamentos confirmados de um professor em um intervalo de tempo.
+     * 
+     * Útil para detectar conflitos de horário ao criar novos agendamentos.
+     * A lógica busca qualquer agendamento que "toque" no intervalo desejado.
+     * 
+     * @param int $professorId ID do professor
+     * @param Carbon $startDate Data/hora de início
+     * @param Carbon $endDate Data/hora de término
+     * @return Collection Coleção de agendamentos confirmados em conflito
      */
     public function getConfirmedAppointmentsForProfessor(int $professorId, Carbon $startDate, Carbon $endDate): Collection
     {
         return $this->model
             ->where('professor_id', $professorId)
             ->where('status', 'confirmed')
-            // Esta lógica complexa de 'where' garante que pegamos qualquer agendamento
-            // que sequer "toque" no intervalo de tempo desejado.
+            // Lógica: busca agendamentos que colidem com o intervalo
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->where('start_time', '<', $endDate)
                       ->where('end_time', '>', $startDate);
@@ -41,9 +48,9 @@ class AppointmentRepository
 
     /**
      * Cria um novo registro de agendamento.
-     *
-     * @param array $data
-     * @return Appointment
+     * 
+     * @param array $data Dados do agendamento
+     * @return Appointment Agendamento criado
      */
     public function create(array $data): Appointment
     {
@@ -51,20 +58,24 @@ class AppointmentRepository
     }
 
     /**
-     * Busca todos os agendamentos de um aluno específico, com seus relacionamentos.
-     *
-     * @param int $userId
-     * @param string|null $status
-     * @return Collection
+     * Busca todos os agendamentos de um aluno específico.
+     * 
+     * Carrega relacionamentos com professor e matéria.
+     * Permite filtro opcional por status.
+     * O filtro 'cancelled' agrupa 'cancelled_by_user' e 'cancelled_by_professor'.
+     * 
+     * @param int $userId ID do aluno
+     * @param string|null $status Status para filtro (pending, confirmed, completed, cancelled)
+     * @return Collection Coleção de agendamentos ordenados por data (mais recentes primeiro)
      */
     public function getByUserId(int $userId, ?string $status = null): Collection
     {
         return $this->model
             ->with(['professor', 'subject'])
             ->where('user_id', $userId)
-            ->when($status, function ($query, $status) { // Aplica o filtro se $status não for nulo
+            ->when($status, function ($query, $status) {
+                // Se o status é 'cancelled', agrupa os dois tipos de cancelamento
                 if ($status === 'cancelled') {
-                    // O status 'cancelado' é um grupo de vários status
                     return $query->whereIn('status', ['cancelled_by_user', 'cancelled_by_professor']);
                 }
                 return $query->where('status', $status);
@@ -74,10 +85,15 @@ class AppointmentRepository
     }
 
     /**
-     * Busca todos os agendamentos de um professor específico, com seus relacionamentos.
-     *
-     * @param int $professorId
-     * @return Collection
+     * Busca todos os agendamentos de um professor específico.
+     * 
+     * Carrega relacionamentos com aluno e matéria.
+     * Permite filtro opcional por status.
+     * O filtro 'cancelled' agrupa 'cancelled_by_user' e 'cancelled_by_professor'.
+     * 
+     * @param int $professorId ID do professor
+     * @param string|null $status Status para filtro (pending, confirmed, completed, cancelled)
+     * @return Collection Coleção de agendamentos ordenados por data (mais recentes primeiro)
      */
     public function getByProfessorId(int $professorId, ?string $status = null): Collection
     {
@@ -96,10 +112,10 @@ class AppointmentRepository
 
     /**
      * Atualiza um agendamento existente.
-     *
-     * @param Appointment $appointment
-     * @param array $data
-     * @return bool
+     * 
+     * @param Appointment $appointment Agendamento a atualizar
+     * @param array $data Dados a atualizar
+     * @return bool True se bem-sucedido
      */
     public function update(Appointment $appointment, array $data): bool
     {

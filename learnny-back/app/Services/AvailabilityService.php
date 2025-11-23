@@ -10,6 +10,12 @@ use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * Serviço de Disponibilidade de Horários
+ * 
+ * Gerencia as regras de disponibilidade de professores e calcula
+ * slots de horários livres para agendamentos.
+ */
 class AvailabilityService
 {
     protected $availabilityRepository;
@@ -24,10 +30,10 @@ class AvailabilityService
     }
 
     /**
-     * Obtém a lista de regras de disponibilidade para um professor.
-     *
+     * Obtém as regras de disponibilidade cadastradas de um professor.
+     * 
      * @param Professor $professor
-     * @return Collection
+     * @return Collection Coleção de regras de disponibilidade por dia da semana
      */
     public function getAvailabilityForProfessor(Professor $professor): Collection
     {
@@ -35,57 +41,60 @@ class AvailabilityService
     }
 
     /**
-     * Gera uma lista de slots de horários disponíveis para um professor
-     * dentro de um intervalo de datas, descontando os horários já agendados.
-     *
+     * Calcula slots de horários disponíveis para agendamento.
+     * 
+     * Gera uma lista de horários livres dentro de um intervalo de datas,
+     * descontando os agendamentos já confirmados e respeitando as
+     * regras de disponibilidade do professor.
+     * 
      * @param Professor $professor
-     * @param string $startDateStr
-     * @param string $endDateStr
-     * @return array
+     * @param string $startDateStr Data de início (formato: Y-m-d)
+     * @param string $endDateStr Data de término (formato: Y-m-d)
+     * @return array Array de slots de horários disponíveis em ISO-8601
      */
-
     public function getAvailableSlots(Professor $professor, string $startDateStr, string $endDateStr): array
     {
         $startDate = Carbon::parse($startDateStr)->startOfDay();
         $endDate = Carbon::parse($endDateStr)->endOfDay();
         
-        // Puxa as regras de disponibilidade e os agendamentos confirmados UMA VEZ.
+        // Carrega as regras de disponibilidade e agendamentos confirmados
         $generalAvailabilities = $professor->availabilities->keyBy('day_of_week');
         $confirmedAppointments = $this->appointmentRepository
             ->getConfirmedAppointmentsForProfessor($professor->id, $startDate, $endDate);
 
         $freeSlots = [];
-        $slotDurationInMinutes = 60; // Duração de cada aula (ex: 60 minutos)
+        $slotDurationInMinutes = 60; // Duração padrão de cada aula
 
-        // Itera por cada dia no intervalo solicitado.
+        // Itera por cada dia no intervalo solicitado
         $period = CarbonPeriod::create($startDate, $endDate);
         foreach ($period as $date) {
             $dayOfWeek = $date->dayOfWeek;
 
-            // Se não houver regra de disponibilidade para este dia da semana, pula.
+            // Se não houver regra de disponibilidade para este dia, continua
             if (!isset($generalAvailabilities[$dayOfWeek])) {
                 continue;
             }
 
-            // Gera os slots potenciais para o dia, com base na regra.
+            // Gera os slots potenciais para o dia com base na regra
             $availability = $generalAvailabilities[$dayOfWeek];
             $slot = Carbon::parse($date->toDateString() . ' ' . $availability->start_time);
             $endTime = Carbon::parse($date->toDateString() . ' ' . $availability->end_time);
 
+            // Itera pelos slots de 1 hora até o final do horário disponível
             while ($slot->lessThan($endTime)) {
                 $isSlotFree = true;
                 
-                // Verifica se o slot atual colide com algum agendamento confirmado.
+                // Verifica se o slot colide com algum agendamento confirmado
                 foreach ($confirmedAppointments as $appointment) {
                     if ($slot->between($appointment->start_time, $appointment->end_time, false) ||
                         $slot->clone()->addMinutes($slotDurationInMinutes)->isAfter($appointment->start_time) && $slot->isBefore($appointment->end_time)) {
                         $isSlotFree = false;
-                        break; // Se encontrou conflito, não precisa checar outros.
+                        break;
                     }
                 }
 
+                // Se o slot está livre, adiciona à lista
                 if ($isSlotFree) {
-                    // Adiciona o slot livre à lista no formato ISO-8601
                     $freeSlots[] = $slot->toIso8601String();
                 }
 
@@ -96,15 +105,29 @@ class AvailabilityService
         
         return $freeSlots;
     }
+
+    /**
+     * Atualiza as regras de disponibilidade de um professor.
+     * 
+     * Operação transacional que:
+     * 1. Remove todas as regras anterior do professor
+     * 2. Cria novas regras com os dados fornecidos
+     * 
+     * Se houver erro, toda a transação é revertida.
+     * 
+     * @param Professor $professor
+     * @param array $availabilitiesData Array com as novas regras (day_of_week, start_time, end_time)
+     * @return bool True se bem-sucedido
+     */
     public function updateProfessorAvailability(Professor $professor, array $availabilitiesData): bool
     {
-        // Ou tudo funciona, ou nada é salvo no banco.
+        // Operação transacional: tudo ou nada
         return DB::transaction(function () use ($professor, $availabilitiesData) {
             
-            // 1. Apaga todas as disponibilidades antigas do professor.
+            // 1. Remove todas as disponibilidades antigas do professor
             $this->availabilityRepository->deleteByProfessorId($professor->id);
 
-            // 2. Itera sobre os novos dados de disponibilidade e os cria no banco.
+            // 2. Cria as novas disponibilidades
             foreach ($availabilitiesData as $availability) {
                 $this->availabilityRepository->create([
                     'professor_id' => $professor->id,

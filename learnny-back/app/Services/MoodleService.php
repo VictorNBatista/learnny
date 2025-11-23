@@ -8,9 +8,15 @@ use App\Models\Subject;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Serviço de Integração com Moodle
+ * 
+ * Gerencia a provisão de contas e cursos no Moodle via API REST.
+ * Implementa compensação (rollback manual) para manter consistência
+ * entre Learnny e Moodle em caso de falha.
+ */
 class MoodleService
 {
-    // 2. REFATORAÇÃO: Mover config para o construtor
     protected $moodleUrl;
     protected $token;
     protected $restEndpoint;
@@ -23,26 +29,34 @@ class MoodleService
     }
 
     /**
-     * Provisiona um ALUNO (seu método original, ajustado para usar o construtor)
+     * Provisiona uma conta de aluno no Moodle.
+     * 
+     * Cria um novo usuário no Moodle com os dados do aluno.
+     * Se bem-sucedido, armazena o ID do Moodle no registro local.
+     * Se falhar, registra o erro mas não bloqueia o fluxo.
+     * 
+     * @param User $user Aluno a provisionar
+     * @param string $plainTextPassword Senha em texto plano
+     * @return void
      */
     public function provisionUser(User $user, string $plainTextPassword): void
     {
+        // Separa nome e sobrenome
         $nameParts = explode(' ', $user->name, 2);
         $firstName = $nameParts[0];
-        $lastName = $nameParts[1] ?? 'Aluno'; // Sobrenome padrão para aluno
+        $lastName = $nameParts[1] ?? 'Aluno'; 
 
-        $usersToCreate = [
-            [
-                'username' => $user->username,
-                'password' => $plainTextPassword,
-                'firstname' => $firstName,
-                'lastname' => $lastName,
-                'email' => $user->email,
-                'auth' => 'manual',
-                'lang' => 'pt_br',
-            ]
-        ];
+        $usersToCreate = [[
+            'username' => $user->username,
+            'password' => $plainTextPassword,
+            'firstname' => $firstName,
+            'lastname' => $lastName,
+            'email' => $user->email,
+            'auth' => 'manual',
+            'lang' => 'pt_br',
+        ]];
 
+        // Faz requisição para criar usuário no Moodle
         $response = Http::asForm()->post($this->restEndpoint, [
             'wstoken' => $this->token,
             'wsfunction' => 'core_user_create_users',
@@ -50,34 +64,48 @@ class MoodleService
             'users' => $usersToCreate,
         ]);
 
+        // Verifica sucesso
         if ($response->successful() && !$response->json('exception')) {
             $moodleUser = $response->json()[0];
             $user->moodle_id = $moodleUser['id'];
             $user->save();
-            Log::info('Aluno provisionado no Moodle com sucesso.', ['user_id' => $user->id, 'moodle_id' => $moodleUser['id']]);
+            Log::info('Aluno provisionado no Moodle.', ['user_id' => $user->id]);
         } else {
-            Log::error('Falha ao provisionar ALUNO no Moodle.', ['user_id' => $user->id, 'response' => $response->body()]);
+            Log::error('Falha ao provisionar ALUNO no Moodle.', ['response' => $response->body()]);
         }
     }
 
     /**
-     * 3. MÉTODO ATUALIZADO: Provisiona um PROFESSOR, CRIA CURSOS e o INSCREVE.
-     *
-     * @param Professor $professor Seu model de Professor
-     * @param string $plainTextPassword A senha em texto plano
-     * @param array $learnnySubjectIds Array de IDs das matérias do Learnny (ex: [1, 2])
-     * @return bool Retorna true em sucesso, false em falha
+     * Provisiona uma conta de professor no Moodle com lógica de compensação.
+     * 
+     * Processo transacional que:
+     * 1. Cria conta do professor no Moodle
+     * 2. Cria cursos para cada matéria
+     * 3. Inscreve o professor como docente em cada curso
+     * 
+     * Se qualquer etapa falhar:
+     * - Deleta os cursos criados
+     * - Deleta a conta do professor
+     * - Retorna false para que o banco local reverta a transação
+     * 
+     * @param Professor $professor Professor a provisionar
+     * @param string $plainTextPassword Senha em texto plano
+     * @param array $learnnySubjectIds IDs das matérias do professor no Learnny
+     * @return bool True se bem-sucedido, false se houve erro
      */
     public function provisionTeacher(Professor $professor, string $plainTextPassword, array $learnnySubjectIds = []): bool
     {
-        // ----- PASSO 1: CRIAR O USUÁRIO (Uma vez) -----
-        
-        $nameParts = explode(' ', $professor->name, 2);
-        $firstName = $nameParts[0];
-        $lastName = $nameParts[1] ?? 'Professor';
+        $moodleUserId = null;
+        $createdCourseIds = [];
 
-        $usersToCreate = [
-            [
+        try {
+            // ----- PASSO 1: CRIAR A CONTA DO PROFESSOR -----
+            
+            $nameParts = explode(' ', $professor->name, 2);
+            $firstName = $nameParts[0];
+            $lastName = $nameParts[1] ?? 'Professor';
+
+            $usersToCreate = [[
                 'username' => $professor->username,
                 'password' => $plainTextPassword,
                 'firstname' => $firstName,
@@ -85,48 +113,37 @@ class MoodleService
                 'email' => $professor->email,
                 'auth' => 'manual',
                 'lang' => 'pt_br',
-            ]
-        ];
+            ]];
 
-        $responseCreate = Http::asForm()->post($this->restEndpoint, [
-            'wstoken' => $this->token,
-            'wsfunction' => 'core_user_create_users',
-            'moodlewsrestformat' => 'json',
-            'users' => $usersToCreate,
-        ]);
-
-        if ($responseCreate->failed() || $responseCreate->json('exception')) {
-            Log::error('Falha ao CRIAR professor no Moodle.', [
-                'teacher_id' => $professor->id,
-                'response' => $responseCreate->body()
+            $responseCreate = Http::asForm()->post($this->restEndpoint, [
+                'wstoken' => $this->token,
+                'wsfunction' => 'core_user_create_users',
+                'moodlewsrestformat' => 'json',
+                'users' => $usersToCreate,
             ]);
-            return false;
-        }
 
-        $moodleUser = $responseCreate->json()[0];
-        $moodleUserId = $moodleUser['id'];
+            // Se falhar na criação do usuário, lança exceção
+            if ($responseCreate->failed() || $responseCreate->json('exception')) {
+                throw new \Exception('Falha ao criar usuário: ' . $responseCreate->body());
+            }
 
-        
-        // ----- PASSO 2: LOOP PARA CRIAR CURSOS E INSCREVER -----
+            $moodleUserId = $responseCreate->json()[0]['id'];
 
-        // Pega os IDs dos config
-        $defaultCategoryId = config('services.moodle.default_category_id');
-        $teacherRoleId = config('services.moodle.teacher_role_id'); // Ex: ID 3 (Professor)
+            // ----- PASSO 2: CRIAR CURSOS E INSCREVER PROFESSOR -----
 
-        try {
+            $defaultCategoryId = config('services.moodle.default_category_id');
+            $teacherRoleId = config('services.moodle.teacher_role_id');
+
+            // Itera sobre cada matéria do professor
             foreach ($learnnySubjectIds as $subjectId) {
-                // A. Buscar o nome da matéria no banco do Learnny
                 $subject = Subject::find($subjectId);
-                if (!$subject) {
-                    Log::warning('Matéria (Subject) não encontrada no Learnny, pulando criação de curso', ['subject_id' => $subjectId]);
-                    continue; // Pula para a próxima matéria
-                }
+                if (!$subject) continue;
 
-                // B. Criar o curso no Moodle
+                // Cria nomes únicos para o curso
                 $courseFullName = "{$subject->name} - {$professor->name}";
-                // O nome curto (shortname) precisa ser único
-                $courseShortName = "learnny_{$subject->id}_{$professor->id}_{$professor->username}";
+                $courseShortName = "learnny_{$subject->id}_{$professor->id}_" . time();
 
+                // A. Criar o Curso
                 $responseCourse = Http::asForm()->post($this->restEndpoint, [
                     'wstoken' => $this->token,
                     'wsfunction' => 'core_course_create_courses',
@@ -135,57 +152,70 @@ class MoodleService
                         'fullname' => $courseFullName,
                         'shortname' => $courseShortName,
                         'categoryid' => $defaultCategoryId,
-                        'visible' => 1, // 1 = Visível, 0 = Oculto
+                        'visible' => 1,
                     ]],
                 ]);
 
-                if ($responseCourse->failed() || !empty($responseCourse->json('exception'))) {
-                    Log::error('Falha ao CRIAR CURSO no Moodle.', [
-                        'teacher_id' => $professor->id, 'moodle_id' => $moodleUserId, 'subject_id' => $subjectId,
-                        'response' => $responseCourse->body()
-                    ]);
-                    throw new \Exception('Falha ao criar curso no Moodle.'); // Força o rollback
+                if ($responseCourse->failed() || $responseCourse->json('exception')) {
+                    throw new \Exception('Falha ao criar curso: ' . $responseCourse->body());
                 }
                 
                 $moodleCourseId = $responseCourse->json()[0]['id'];
+                $createdCourseIds[] = $moodleCourseId; // Armazena para limpeza se necessário
 
-                // C. Inscrever o professor no curso que acabamos de criar
+                // B. Inscrever professor como docente no curso
                 $responseEnrol = Http::asForm()->post($this->restEndpoint, [
                     'wstoken' => $this->token,
                     'wsfunction' => 'enrol_manual_enrol_users',
                     'moodlewsrestformat' => 'json',
                     'enrolments' => [[
-                        'roleid' => $teacherRoleId, // O ID do papel "Professor" (ex: 3)
+                        'roleid' => $teacherRoleId,
                         'userid' => $moodleUserId,
                         'courseid' => $moodleCourseId,
                     ]],
                 ]);
 
-                if ($responseEnrol->failed() || !empty($responseEnrol->json('exception'))) {
-                    Log::error('Falha ao INSCREVER PROFESSOR no curso.', [
-                        'teacher_id' => $professor->id, 'moodle_id' => $moodleUserId, 'course_id' => $moodleCourseId,
-                        'response' => $responseEnrol->body()
-                    ]);
-                    throw new \Exception('Falha ao inscrever professor no curso.'); // Força o rollback
+                if ($responseEnrol->failed() || $responseEnrol->json('exception')) {
+                    throw new \Exception('Falha ao inscrever: ' . $responseEnrol->body());
                 }
-            } // Fim do foreach
+            }
+
+            // SUCESSO: Salva o ID do Moodle no professor
+            $professor->moodle_id = $moodleUserId;
+            $professor->save();
+            
+            return true;
 
         } catch (\Exception $e) {
-            // Se qualquer etapa do loop falhar, o catch() pega
-            // e retorna false, o que vai acionar o rollback no ProfessorService
-            Log::error('Erro no loop de criação de cursos Moodle: ' . $e->getMessage());
+            // Erro capturado: iniciando limpeza (compensação)
+            Log::error('Erro no provisionamento Moodle. Iniciando limpeza...', ['error' => $e->getMessage()]);
+
+            // --- LÓGICA DE ROLLBACK MANUAL ---
+            
+            // 1. Deletar cursos criados (se houver)
+            if (!empty($createdCourseIds)) {
+                Http::asForm()->post($this->restEndpoint, [
+                    'wstoken' => $this->token,
+                    'wsfunction' => 'core_course_delete_courses',
+                    'moodlewsrestformat' => 'json',
+                    'courseids' => $createdCourseIds,
+                ]);
+                Log::info('Cursos do Moodle revertidos/deletados.', ['ids' => $createdCourseIds]);
+            }
+
+            // 2. Deletar usuário criado (se houver)
+            if ($moodleUserId) {
+                Http::asForm()->post($this->restEndpoint, [
+                    'wstoken' => $this->token,
+                    'wsfunction' => 'core_user_delete_users',
+                    'moodlewsrestformat' => 'json',
+                    'userids' => [$moodleUserId],
+                ]);
+                Log::info('Usuário do Moodle revertido/deletado.', ['id' => $moodleUserId]);
+            }
+
+            // Retorna false para acionar rollback no banco local
             return false;
         }
-
-        // ----- PASSO 3: SUCESSO TOTAL -----
-        $professor->moodle_id = $moodleUserId;
-        $professor->save();
-        
-        Log::info('Professor provisionado e inscrito nos cursos do Moodle com sucesso.', [
-            'teacher_id' => $professor->id,
-            'moodle_id' => $moodleUserId
-        ]);
-
-        return true;
     }
 }

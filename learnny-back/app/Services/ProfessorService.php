@@ -2,39 +2,58 @@
 
 namespace App\Services;
 
-// 1. IMPORTAR O MOODLE SERVICE
-use App\Services\MoodleService; 
+use App\Services\MoodleService;
 use App\Repositories\ProfessorRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
+/**
+ * Serviço de Professores
+ * 
+ * Encapsula a lógica de negócio para operações com professores,
+ * incluindo integração transacional com o Moodle para provisionamento.
+ */
 class ProfessorService
 {
     protected $professorRepository;
-    // 2. DECLARAR O MOODLE SERVICE
-    protected $moodleService; 
+    protected $moodleService;
 
-    // 3. INJETAR O MOODLE SERVICE NO CONSTRUTOR
     public function __construct(
         ProfessorRepository $professorRepository, 
         MoodleService $moodleService
     ) {
         $this->professorRepository = $professorRepository;
-        $this->moodleService = $moodleService; // Atribuir
+        $this->moodleService = $moodleService;
     }
 
+    /**
+     * Obtém todos os professores aprovados.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection Coleção de professores
+     */
     public function listProfessors()
     {
         return $this->professorRepository->getAll();
     }
 
+    /**
+     * Busca um professor pelo ID.
+     * 
+     * @param int $id ID do professor
+     * @return \App\Models\Professor|null Professor encontrado ou null
+     */
     public function findProfessorById($id)
     {
         return $this->professorRepository->findById($id);
     }
 
+    /**
+     * Busca o professor autenticado pelo ID do token.
+     * 
+     * @return \App\Models\Professor|null Professor autenticado ou null
+     */
     public function findMe()
     {
         $professorId = auth()->id();
@@ -42,78 +61,104 @@ class ProfessorService
     }
 
     /**
-     * MÉTODO PRINCIPAL MODIFICADO
+     * Cria um novo professor com operação transacional.
+     * 
+     * Processo transacional:
+     * 1. Cria professor no banco local
+     * 2. Associa matérias ao professor
+     * 3. Provisiona conta no Moodle
+     * 4. Cria cursos no Moodle para cada matéria
+     * 
+     * Se qualquer etapa falhar, toda a transação é revertida,
+     * garantindo consistência entre Learnny e Moodle.
+     * 
+     * @param array $data Dados do professor (nome, email, password, subjects, etc)
+     * @return \App\Models\Professor Professor criado
+     * @throws Exception Se falhar em qualquer etapa
      */
     public function createProfessor(array $data)
     {
-        // 4. Precisamos da senha em texto plano para o Moodle
-        // Vamos assumir que $data['password'] vem do controller como texto plano
+        // Verifica se a senha foi fornecida
         if (!isset($data['password'])) {
             throw new Exception('O campo senha é obrigatório para criar professor.');
         }
+        
+        // Armazena a senha em texto plano para o Moodle
         $plainTextPassword = $data['password'];
 
-        // 5. Fazemos o Hash da senha AGORA, para salvar no banco local
+        // Hash da senha para armazenar no banco local
         $data['password'] = Hash::make($plainTextPassword);
 
         return DB::transaction(function () use ($data, $plainTextPassword) {
             try {
+                // Extrai as matérias (subjects) dos dados
                 $subjects = $data['subjects'] ?? [];
                 unset($data['subjects']);
 
-                $data['status'] = 'pending'; // Como no seu original
+                // Define status inicial como pendente
+                $data['status'] = 'pending';
 
-                // 6. Cria o professor no banco local (Learnny)
+                // Cria o professor no banco local
                 $professor = $this->professorRepository->create($data);
 
+                // Associa as matérias ao professor
                 if (!empty($subjects)) {
                     $professor->subjects()->sync($subjects);
                 }
 
-                // 7. CHAMA O MOODLE SERVICE
-                // Passa o objeto $professor recém-criado e a senha em texto plano
+                // Log de início do provisionamento
                 Log::info('Iniciando provisionamento do Moodle para o professor: ' . $professor->email);
                 
+                // Provisiona conta no Moodle com as matérias
                 $moodleSuccess = $this->moodleService->provisionTeacher(
                     $professor, 
                     $plainTextPassword, 
-                    $subjects // Passa os IDs das matérias
+                    $subjects
                 );
 
-                // 8. VERIFICA A FALHA
+                // Verifica se o provisionamento foi bem-sucedido
                 if (!$moodleSuccess) {
-                    // Se o provisionamento do Moodle falhar, nós forçamos
-                    // o rollback da transação inteira.
+                    // Se falhar, força rollback de toda a transação
                     throw new Exception('Falha ao provisionar professor no Moodle. Transação revertida.');
                 }
 
-                // Se tudo deu certo, retorna o professor
                 return $professor;
 
             } catch (Exception $e) {
-                // Loga o erro específico
+                // Registra o erro completo para debugging
                 Log::error('Erro ao criar professor (Moodle/Local): '.$e->getMessage(), [
                     'data' => $data
                 ]);
-                // Re-lança a exceção para garantir que o DB::transaction faça o rollback
+                // Re-lança a exceção para o DB::transaction fazer o rollback
                 throw $e;
             }
         });
     }
 
+    /**
+     * Atualiza dados de um professor existente.
+     * 
+     * @param int $id ID do professor
+     * @param array $data Dados a atualizar
+     * @return \App\Models\Professor Professor atualizado
+     * @throws Exception
+     */
     public function updateProfessor($id, array $data)
     {
-        // (Lógica original mantida)
-        // ...
-        // (Se precisar atualizar no Moodle, a lógica seria aqui)
         return DB::transaction(function () use ($id, $data) {
             try {
+                // Extrai as matérias dos dados
                 $subjects = $data['subjects'] ?? [];
                 unset($data['subjects']);
+                
+                // Atualiza o professor
                 $professor = $this->professorRepository->update($id, $data);
+                
+                // Sincroniza as matérias
                 if (!empty($subjects)) {
                     $professor->subjects()->sync($subjects);
                 }
+                
                 return $professor;
             } catch (Exception $e) {
                 Log::error('Erro ao atualizar professor: '.$e->getMessage(), [
@@ -125,24 +170,46 @@ class ProfessorService
         });
     }
 
+    /**
+     * Exclui um professor do sistema.
+     * 
+     * @param int $id ID do professor
+     * @return \App\Models\Professor Professor excluído
+     */
     public function deleteProfessor($id)
     {
-        // (Aqui você também precisaria chamar o MoodleService para deletar/suspender)
+        // Nota: Integração com Moodle para deletar/suspender pode ser implementada aqui
         return $this->professorRepository->delete($id);
     }
 
+    /**
+     * Lista todos os professores pendentes de aprovação.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection Coleção de professores pendentes
+     */
     public function listPendingProfessors()
     {
         return $this->professorRepository->getPendingProfessors();
     }
 
+    /**
+     * Aprova um professor e ativa sua conta.
+     * 
+     * @param int $id ID do professor
+     * @return \App\Models\Professor Professor aprovado
+     */
     public function approveProfessor($id)
     {
-        // (Aqui você poderia chamar o MoodleService para "des-suspender" o usuário)
-        // Por enquanto, apenas cria o usuário no Moodle como ativo
+        // Nota: Integração com Moodle para ativar conta pode ser implementada aqui
         return $this->professorRepository->updateStatus($id, 'approved');
     }
 
+    /**
+     * Rejeita um professor e desativa sua conta.
+     * 
+     * @param int $id ID do professor
+     * @return \App\Models\Professor Professor rejeitado
+     */
     public function rejectProfessor($id)
     {
         return $this->professorRepository->updateStatus($id, 'rejected');
