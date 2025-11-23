@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://learnny.test'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
